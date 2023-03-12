@@ -12,7 +12,7 @@ public class Main {
         // Search search = new ...;
         //Search agent = new SearchAgent(problem, search);
 
-        //**************** Estado Finale **********************
+        //**************** Estado Final **********************
         // print del estado final
     }
 }
