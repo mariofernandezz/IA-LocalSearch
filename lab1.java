@@ -2,7 +2,6 @@
 
 
 import java.util.ArrayList;
-import aima.basic.XYLocation;
 import ia.comparticion.usuario;
 import ia.comparticion.usuarios;
 
