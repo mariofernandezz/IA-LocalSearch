@@ -18,7 +18,7 @@ public class Main {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
-
+ 
         //System.out.println(estado.getUsuarios());
         //System.out.println(estado.getUsuarios2());
 
@@ -28,7 +28,7 @@ public class Main {
             Usuario u1 = estado.getUsuarios().get(i);
             System.out.println("O: (" + u1.getCoordOrigenX() + "," + u1.getCoordOrigenY() + ") D: (" + u1.getCoordDestinoX() + "," + u1.getCoordDestinoY() + ") C: "+ u1.isConductor());
         }
-
+/*
         // Añadimos conductores a los eventos
         for(int i = 0; i < estado.getUsuarios().size(); i++) {
             Usuario u1 = estado.getUsuarios().get(i);
@@ -64,8 +64,14 @@ public class Main {
             System.out.println("Conductor: " + i + " Eventos: " + e1);
         }
 
+        System.out.println(estado.numeroPasajeros(0));
+*/
 
         estado.solucionInicial1();
+        for(int i = 0; i < estado.getEventos().size(); i++) {
+            ArrayList<Integer> e1 = estado.getEventos().get(i);
+            System.out.println("Conductor: " + i + " Eventos: " + e1);
+        }
         // estado.solucionInicial2();
 
         //**************** Estado Inicial *********************

@@ -18,7 +18,9 @@ public class Estado {
     int N;
 
     /*CONSTRUCTOR*/
-    public Estado(int N, int M, int seed){
+    public Estado(int n, int m, int seed){
+        N = n;
+        M = m;
         u = new Usuarios(N, M, seed);
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
@@ -82,10 +84,56 @@ public class Estado {
         eventos.get(c).set(id2, a);
     }
 
+    public int numeroPasajeros(int c){
+        return (eventos.get(c).size()-1)/2;
+    }
+
 
     public void solucionInicial1() {
+        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
+        // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
+
+        // Añadimos todos los conductores a los eventos
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+        }
+
+        // Asignamos conductor a los pasajeros
+        int c = 0;
+        int p = M;
+        while(p<N && c<M){
+            while(p<N && kilometrajeValido(eventos.get(c))){
+                anadirPasajero(p, c);
+                p++;
+            }
+            c++;
+        }
+        if(p<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
 
     }
+    
+
+    /*
+         public void solucionInicial1() {
+        ArrayList<Integer> usados = new ArrayList<>(n);
+        for (int i = 100; i < n; ++i) usados.add(i);        //Lista con N-M ids
+        Collections.shuffle(usados);                        //Randomizar la lista
+        //System.out.print();
+        System.out.println(eventos);
+        for(int i = 0; i < m; ++i) {
+            // falta comprobar que le da tiempo
+            ArrayList<Integer> aux = new ArrayList<>();
+            aux.add(i);
+            aux.add(usados.get(i));
+            aux.add(usados.get(i));
+            //if(kilometrajeValido(aux)) eventos.add(aux);
+            //else System.exit(0);
+            eventos.add(aux);
+        }
+        System.out.println(eventos);
+    }
+     */
 
     //public void solucionInicial2() {}
 
@@ -100,25 +148,34 @@ public class Estado {
         return retVal;
     }*/
 
-    private int distancia(Usuario A, Usuario B){
-        int Ax, Bx, Ay, By;
-
-        Ax = A.getCoordOrigenX();
-        Ay = A.getCoordOrigenY();
-        Bx = B.getCoordOrigenX();
-        By = B.getCoordOrigenY();
-
+    private int distancia(int Ax, int Ay, int Bx, int By){
         return abs(Ax - Bx) + abs(Ay - By);
     }
 
     // Verificar Kilometraje (max 30km = 300 manzanas)
     public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
         int dist = 0;
-        dist += distancia(usuarios.get(0), usuarios.get(eventos.size()-1));
-
-        for(int i = 0; i < eventosConductor.size()-1 && dist < 300; i++) {
-            dist += distancia(usuarios.get(i), usuarios.get(i+1));
+        int c = eventosConductor.get(0);
+        int Ax, Ay, Bx, By;
+        Ax = usuarios.get(c).getCoordOrigenX();
+        Ay = usuarios.get(c).getCoordOrigenY();
+        HashSet<Integer> set = new HashSet<>();
+        for(int i = 1; i < eventosConductor.size() && dist <= 300; i++) {
+            int id2 = eventosConductor.get(i);
+            if(set.contains(id2)) {
+                Bx = usuarios.get(id2).getCoordDestinoX();
+                By = usuarios.get(id2).getCoordDestinoY();
+            } else {
+                set.add(id2);
+                Bx = usuarios.get(id2).getCoordOrigenX();
+                By = usuarios.get(id2).getCoordOrigenY();
+            }
+            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);
+            dist += distancia(Ax, Ay, Bx, By);
+            Ax = Bx;
+            Ay = By;
         }
+        dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
         return dist <= 300;
     }
 
