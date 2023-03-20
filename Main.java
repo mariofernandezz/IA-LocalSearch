@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class Main {
 
     public static void main(String[] args) {
@@ -11,7 +12,15 @@ public class Main {
         int M = scan.nextInt();
         System.out.println("Introduce una seed");
         int seed = scan.nextInt();
-        CarSchedule estado = new CarSchedule(N, M, seed);
+
+        Estado estado = new Estado(N, M, seed);
+
+        //System.out.println(estado.getUsuarios());
+        //System.out.println(estado.getUsuarios2());
+        /*for(int i = 0; i < estado.getUsuarios().size(); i++) {
+            System.out.println(estado.getUsuarios().get(i).isConductor());
+        }*/
+
 
         estado.solucionInicial1();
         // estado.solucionInicial2();

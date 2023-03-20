@@ -1,13 +1,8 @@
 // DEFINICIÓN DE LOS OPERADORES
-import java.util.ArrayList;
-
-import IA.Comparticion.Usuarios;
-import IA.Comparticion.Usuario;
-
 
 public class CarBoard {
 
-	public static String ADD = "add";
+	/*public static String ADD = "add";
 	public static String REMOVE = "remove";
 	public static String SWAP_EVENT = "swap_event";
 	public static String SWAP_DRIVER = "swap_driver";
@@ -84,5 +79,5 @@ public class CarBoard {
     events_driver.set(id2, a);
     return events_driver;
   }
-
+*/
 }
