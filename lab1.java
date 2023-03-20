@@ -1,5 +1,5 @@
 // DEFINICIÓN DE LOS OPERADORES
-
+/* 
 
 import java.util.ArrayList;
 import ia.comparticion.usuario;
@@ -85,3 +85,4 @@ public class CarBoard {
   }
 
 }
+*/
