@@ -15,21 +15,14 @@ public class Main {
 
         Estado estado = new Estado(N, M, seed);
 
-        //System.out.println(estado.getUsuarios());
-        //System.out.println(estado.getUsuarios2());
-        /*for(int i = 0; i < estado.getUsuarios().size(); i++) {
-            System.out.println(estado.getUsuarios().get(i).isConductor());
-        }*/
-
-
         estado.solucionInicial1();
         // estado.solucionInicial2();
 
         //**************** Estado Inicial *********************
         // print del estado inicial
 
-         //Problem problem = new Problem(estado, new SuccessorFunction(), new GoalTest(), new heuristicFunction());
-         //Search search = new ...;
+        //Problem problem = new Problem(estado, new SuccessorFunction(), new GoalTest(), new heuristicFunction());
+        //Search search = new ...;
         //Search agent = new SearchAgent(problem, search);
 
         //**************** Estado Final ***********************
