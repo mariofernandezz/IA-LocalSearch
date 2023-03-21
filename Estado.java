@@ -5,6 +5,7 @@ import IA.Comparticion.Usuarios;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+
 import static java.lang.Math.abs;
 
 
@@ -25,6 +26,11 @@ public class Estado {
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
         ordenar();
+    }
+
+    public Estado(ArrayList<Usuario> usuarios, ArrayList<ArrayList<Integer>> eventos){
+        eventos = new ArrayList<ArrayList<Integer>>(M);
+        usuarios = new ArrayList<>();
     }
 
     private void ordenar() {
@@ -57,8 +63,10 @@ public class Estado {
         eventos.get(c).add(c);
     }
 
-    public void eliminarConductor(int c){
+    public void eliminarConductor(int c, int c2){
         eventos.get(c).remove(Integer.valueOf(c));
+        eventos.get(c2).add(c);
+        eventos.get(c2).add(c);
     }
 
     public void anadirPasajero(int p, int c){
@@ -66,14 +74,14 @@ public class Estado {
         eventos.get(c).add(p);
     }
 
-    public void eliminarPasajero(int p){
-        int c = obtenerConductor(p);
+    public void eliminarPasajero(int p, Integer c){
+        if (c == null) c = obtenerConductor(p);
         eventos.get(c).remove(Integer.valueOf(p));
         eventos.get(c).remove(Integer.valueOf(p));
     }
 
-    public void cambiarConductor(int p, int c2){
-        eliminarPasajero(p);
+    public void cambiarConductor(int p, Integer c, int c2){
+        eliminarPasajero(p, c);
         anadirPasajero(p, c2);
     }
 
@@ -101,10 +109,17 @@ public class Estado {
         // Asignamos conductor a los pasajeros
         int c = 0;
         int p = M;
+        boolean esValido = true;
         while(p<N && c<M){
-            while(p<N && kilometrajeValido(eventos.get(c))){
+            while(p<N && esValido){
                 anadirPasajero(p, c);
                 p++;
+                esValido = kilometrajeValido(eventos.get(c));
+            }
+            if (! esValido){
+                p--;
+                eliminarPasajero(p, c);
+                esValido = true;
             }
             c++;
         }
