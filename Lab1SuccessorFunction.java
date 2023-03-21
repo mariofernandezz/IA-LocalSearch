@@ -14,6 +14,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
 
         // 1. Swap eventos dentro de un mismo conductor
+        // Mirar que no sea el mismo elemento en las dos posiciones que cambiamos
         for (int i=0; i<estado.M; i++){
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ //el primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 for (int k=1; k<estado.getEventos().get(i).size(); k++){
