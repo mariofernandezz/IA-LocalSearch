@@ -152,8 +152,7 @@ public class Estado {
         return abs(Ax - Bx) + abs(Ay - By);
     }
 
-    // Verificar Kilometraje (max 30km = 300 manzanas)
-    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
+    public int kilometrajeConductor(ArrayList<Integer> eventosConductor){
         int dist = 0;
         int c = eventosConductor.get(0);
         int Ax, Ay, Bx, By;
@@ -176,7 +175,12 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return dist <= 300;
+        return dist;
+    }
+
+    // Verificar Kilometraje (max 30km = 300 manzanas)
+    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
+        return kilometrajeConductor(eventosConductor) <= 300;
     }
 
     // Verificar 2 conductores
