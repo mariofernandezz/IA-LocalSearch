@@ -48,7 +48,7 @@ public class Estado {
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
 
     /* FUNCIONES AUXILIARES */
-    private int obtenerConductor(int p){
+    public int obtenerConductor(int p){
         for (int i = 0; i < eventos.size(); i++) {
 			for (int j = 0; j < eventos.get(i).size(); j++){
                 if (eventos.get(i).get(j) == p) return i;
@@ -59,7 +59,7 @@ public class Estado {
 
     /* OPERADORES */
     public void anadirConductor(int c){
-        eventos.add(new ArrayList<>());
+        eventos.add(new ArrayList<>()); // CUIDADO CON ESTO A LA HORA DE AÑADIR UN NUEVO CONDUCTOR!!
         eventos.get(c).add(c);
     }
 
@@ -205,6 +205,22 @@ public class Estado {
             if(set.contains(eventosConductor.get(i))) set.remove(eventosConductor.get(i));
             else if (set.size() == 2) return false;
             else set.add(eventosConductor.get(i));
+        }
+        return true;
+    }
+
+    // Verificar si hay algun conductor que no lleve a ningun pasajero
+    public boolean conductoresSinPasajeros() {
+        for(int i = 0; i < eventos.size(); ++i) {
+            if (eventos.get(i).size() == 1) return true;
+        }
+        return false;
+    }
+
+    // Verificar si estan todos los posibles conductores conduciendo
+    public boolean todosConduciendo() {
+        for(int i = 0; i < eventos.size(); ++i) {
+            if (eventos.get(i).size() == 0) return false;
         }
         return true;
     }

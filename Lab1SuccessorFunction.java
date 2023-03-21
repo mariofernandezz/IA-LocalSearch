@@ -41,7 +41,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                         set.add(j);
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.cambiarConductor(j, i, k);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k)) && estadoNuevo.twoPassengers(estadoNuevo.getEventos().get(i)) && estadoNuevo.twoPassengers(estadoNuevo.getEventos().get(k))){
+                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             String S = "heuristic:" + h;
                             retVal.add(new Successor(S, estadoNuevo));
@@ -59,7 +59,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     if (i!=j) { 
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.eliminarConductor(i, j);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j)) && estadoNuevo.twoPassengers(estadoNuevo.getEventos().get(j))){
+                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             String S = "heuristic:" + h;
                             retVal.add(new Successor(S, estadoNuevo));
@@ -67,6 +67,19 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
 
                     }
                 }
+            }
+        }
+
+        // 4. Añadir un pasajero que puede conducir como conductor
+        for (int i=0; i<estado.M; i++){
+            if (estado.getEventos().get(i).size() == 0) { // Es un possible conductor que no conduce
+                int ConductorDelNuevoConductor = estado.obtenerConductor(i);
+                Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                estadoNuevo.eliminarPasajero(i, ConductorDelNuevoConductor);
+                estadoNuevo.anadirConductor(i); // REVISAR LO DE QUE SE AÑADE UN ARRAYLIST A OTRO
+                double h = Lab1HF.getHeuristicValue(estadoNuevo);
+                String S = "heuristic:" + h;
+                retVal.add(new Successor(S, estadoNuevo));
             }
         }
 
