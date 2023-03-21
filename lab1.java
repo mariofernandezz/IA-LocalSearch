@@ -1,5 +1,5 @@
 // DEFINICIÓN DE LOS OPERADORES
-
+/* 
 
 import java.util.ArrayList;
 import ia.comparticion.usuario;
@@ -17,17 +17,15 @@ public class CarBoard {
 	public static String SWAP_DRIVER = "swap_driver";
 
   //Auxiliary functions
-  public usuario getDriverOf(usuario A){
-    events = getEvents();
+  public int getDriverOf(int A){
     for (int i = 0; i < events.size(); i++) {
-			for (int j = 0; j < events[i].size(); j++){
+			for (int j = 0; j < events.get(i).size(); j++){
         if (events.get(i).get(j) == A) {
           return i;
         }
       }
 		}
-    //It has no driver assigned. The user is the driver itself.
-    return A;
+    return -1;
   }
 
   public int[] getPositions(usuario A, usuario B){
@@ -50,16 +48,15 @@ public class CarBoard {
 
 
   //Operator functions
-  public void addPassenger(usuario p, usuario d){
+  public void addPassenger(int p, int d){
     events.get(d).add(p);
     events.get(d).add(p);
   }
 
-  public void deletePassenger(usuario p){
-    usuario driver = getDriverOf(p);
-    ids = getPositions(p, driver);
-    events.get(driver).remove(ids[1]);
-    events.get(driver).remove(ids[0]);
+  public void deletePassenger(int p){
+    int driver = getDriverOf(p);
+    events.get(driver).remove(p);
+    events.get(driver).remove(p);
   }
 
   public void addDriver(usuario d){
@@ -88,3 +85,4 @@ public class CarBoard {
   }
 
 }
+*/
