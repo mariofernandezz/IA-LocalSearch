@@ -1,4 +1,5 @@
 // GENERADOR DE SOLUCIÓN ALEATORIA PARA SIMULATED ANNEALING
+
 // !!!!!!!!!!!!!!!!! hasta que punto es necesario el operador de eliminar conductor?
 // SI ESCOJO PRIMERO ALEATORIAMENTE EL OPERADOR, HAY SUCESORES CON MAS PROBABILIDAD, AQUELLOS QUE ES ELIMINAR UN CONDUCTOR (LO CUAL PUEDE SER BUENO?)
 // AUNQ LO MISMO PASA CON AÑADIR UN CONDUCTOR
@@ -15,10 +16,10 @@ import java.util.Random;
 import aima.search.framework.Successor;
 import aima.search.framework.SuccessorFunction;
 
-public class Lab1SuccessorFunction implements SuccessorFunction {
+public class Lab1SASuccessorFunction implements SuccessorFunction {
     
-    public Successor getSuccessor(Object s){
-        Successor retVal;
+    public List getSuccessors(Object s){
+        List retVal = new ArrayList();
         Estado estado  = (Estado) s;
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
@@ -33,7 +34,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         Random random = new Random();
         int min = 1; // Valor mínimo del rango
         int max = 4; // Valor máximo del rango
-        int Operador;
+        int Operador = 0;
         boolean valido = false;
         while (!valido) {
             valido = true;
@@ -47,7 +48,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             // Escoger un conductor aleatorio
             min = 0;
             max = estado.M - 1;
-            int Conductor;
+            int Conductor = 0;
             valido = false;
             while (!valido) {
                 Conductor = random.nextInt(max - min + 1) + min;
@@ -66,7 +67,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor)) && estadoNuevo.twoPassengers(estadoNuevo.getEventos().get(Conductor))){
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
                         String S = "heuristic:" + h;
-                        retVal = new Successor(S, estadoNuevo);
+                        retVal.add(new Successor(S, estadoNuevo));
                         return retVal;
                     }
                 }
@@ -77,7 +78,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             // Escoger un conductor que lleve pasajeros aleatoriamente
             min = 0;
             max = estado.M - 1;
-            int Conductor1;
+            int Conductor1 = 0;
             valido = false;
             while (!valido) {
                 Conductor1 = random.nextInt(max - min + 1) + min;
@@ -89,6 +90,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             max = estado.getEventos().get(Conductor1).size() - 1;
             int evento = random.nextInt(max - min + 1) + min;
             int Pasajero = estado.getEventos().get(Conductor1).get(evento);
+
             // Escoger otro conductor aleatorio
             min = 0;
             max = estado.M - 1;
@@ -100,7 +102,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
                         String S = "heuristic:" + h;
-                        retVal = new Successor(S, estadoNuevo);
+                        retVal.add(new Successor(S, estadoNuevo));
                         return retVal;
                     }
                 }
@@ -111,7 +113,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             // Escoger un conductor que solo se lleve a si mismo aleatoriamente
             min = 0;
             max = estado.M - 1;
-            int Conductor1;
+            int Conductor1 = 0;
             valido = false;
             while (!valido) {
                 Conductor1 = random.nextInt(max - min + 1) + min;
@@ -127,7 +129,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
                         String S = "heuristic:" + h;
-                        retVal = new Successor(S, estadoNuevo);
+                        retVal.add(new Successor(S, estadoNuevo));
                         return retVal;
                     }
                 }
@@ -148,7 +150,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     estadoNuevo.anadirConductor(NuevoConductor); // REVISAR LO DE QUE SE AÑADE UN ARRAYLIST A OTRO
                     double h = Lab1HF.getHeuristicValue(estadoNuevo);
                     String S = "heuristic:" + h;
-                    retVal = new Successor(S, estadoNuevo);
+                    retVal.add(new Successor(S, estadoNuevo));
                     return retVal;
                 }
             }
