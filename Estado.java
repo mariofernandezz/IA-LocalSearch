@@ -29,6 +29,8 @@ public class Estado {
     }
 
     public Estado(ArrayList<Usuario> usuarios, ArrayList<ArrayList<Integer>> eventos){
+        N = usuarios.size();
+        M = eventos.size();
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
     }
@@ -59,7 +61,7 @@ public class Estado {
 
     /* OPERADORES */
     public void anadirConductor(int c){
-        eventos.add(new ArrayList<>());
+        if (eventos.size() < M) eventos.add(new ArrayList<>());
         eventos.get(c).add(c);
     }
 
@@ -184,7 +186,6 @@ public class Estado {
                 Bx = usuarios.get(id2).getCoordOrigenX();
                 By = usuarios.get(id2).getCoordOrigenY();
             }
-            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);
             dist += distancia(Ax, Ay, Bx, By);
             Ax = Bx;
             Ay = By;
@@ -199,7 +200,7 @@ public class Estado {
     }
 
     // Verificar 2 conductores
-    public boolean twoPassengers(ArrayList<Integer> eventosConductor){
+    public boolean dosPasajeros(ArrayList<Integer> eventosConductor){
         HashSet<Integer> set = new HashSet<>();
         for(int i = 1; i < eventosConductor.size(); ++i) {
             if(set.contains(eventosConductor.get(i))) set.remove(eventosConductor.get(i));
