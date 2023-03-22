@@ -4,6 +4,12 @@ import IA.Comparticion.Usuarios;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import aima.search.framework.Problem;
+import aima.search.framework.Search;
+import aima.search.framework.SearchAgent;
+import aima.search.informed.HillClimbingSearch;
+import aima.search.informed.SimulatedAnnealingSearch;
+
 
 public class Main {
 
@@ -29,6 +35,12 @@ public class Main {
             System.out.println("O: (" + u1.getCoordOrigenX() + "," + u1.getCoordOrigenY() + ") D: (" + u1.getCoordDestinoX() + "," + u1.getCoordDestinoY() + ") C: "+ u1.isConductor());
         }
 /*
+        System.out.println("Planificación inicial: ");
+        for(int i = 0; i < estado.getEventos().size(); i++) {
+            ArrayList<Integer> e1 = estado.getEventos().get(i);
+            System.out.println("Conductor: " + i + " Eventos: " + e1);
+        }
+
         // Añadimos conductores a los eventos
         for(int i = 0; i < estado.getUsuarios().size(); i++) {
             Usuario u1 = estado.getUsuarios().get(i);
@@ -48,8 +60,8 @@ public class Main {
             System.out.println("Conductor: " + i + " Eventos: " + e1);
         }
 
-        estado.cambiarConductor(2, 1);
-        estado.cambiarConductor(4, 0);
+        estado.cambiarConductor(2, null, 1);
+        estado.cambiarConductor(4, null, 0);
         System.out.println("Nueva Planificación:");
         for(int i = 0; i < estado.getEventos().size(); i++) {
             ArrayList<Integer> e1 = estado.getEventos().get(i);
@@ -66,12 +78,13 @@ public class Main {
 
         System.out.println(estado.numeroPasajeros(0));
 */
-
+        
         estado.solucionInicial1();
         for(int i = 0; i < estado.getEventos().size(); i++) {
             ArrayList<Integer> e1 = estado.getEventos().get(i);
             System.out.println("Conductor: " + i + " Eventos: " + e1);
         }
+        
         // estado.solucionInicial2();
 
         //**************** Estado Inicial *********************

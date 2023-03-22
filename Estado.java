@@ -27,6 +27,13 @@ public class Estado {
         ordenar();
     }
 
+    public Estado(ArrayList<Usuario> usuarios, ArrayList<ArrayList<Integer>> eventos){
+        N = usuarios.size();
+        M = eventos.size();
+        eventos = new ArrayList<ArrayList<Integer>>(M);
+        usuarios = new ArrayList<>();
+    }
+
     private void ordenar() {
         for (Usuario usuario : u) {
             if (usuario.isConductor()) usuarios.add(usuario);
@@ -53,12 +60,14 @@ public class Estado {
 
     /* OPERADORES */
     public void anadirConductor(int c){
-        eventos.add(new ArrayList<>());
+        if (eventos.size() < M) eventos.add(new ArrayList<>());
         eventos.get(c).add(c);
     }
 
-    public void eliminarConductor(int c){
+    public void eliminarConductor(int c, int c2){
         eventos.get(c).remove(Integer.valueOf(c));
+        eventos.get(c2).add(c);
+        eventos.get(c2).add(c);
     }
 
     public void anadirPasajero(int p, int c){
@@ -66,14 +75,14 @@ public class Estado {
         eventos.get(c).add(p);
     }
 
-    public void eliminarPasajero(int p){
-        int c = obtenerConductor(p);
+    public void eliminarPasajero(int p, Integer c){
+        if (c == null) c = obtenerConductor(p);
         eventos.get(c).remove(Integer.valueOf(p));
         eventos.get(c).remove(Integer.valueOf(p));
     }
 
-    public void cambiarConductor(int p, int c2){
-        eliminarPasajero(p);
+    public void cambiarConductor(int p, Integer c, int c2){
+        eliminarPasajero(p, c);
         anadirPasajero(p, c2);
     }
 
@@ -192,7 +201,7 @@ public class Estado {
         }
         System.out.println(eventos);
     }
-     */
+    */
 
     /* CONDICIONES DE APLICABILIDAD */
 
@@ -209,8 +218,7 @@ public class Estado {
         return abs(Ax - Bx) + abs(Ay - By);
     }
 
-    // Verificar Kilometraje (max 30km = 300 manzanas)
-    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
+    public int kilometrajeConductor(ArrayList<Integer> eventosConductor){
         int dist = 0;
         int c = eventosConductor.get(0);
         int Ax, Ay, Bx, By;
@@ -233,12 +241,16 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        //System.out.print(dist + " -- ");
-        return dist <= 300;
+        return dist;
+    }
+
+    // Verificar Kilometraje (max 30km = 300 manzanas)
+    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
+        return kilometrajeConductor(eventosConductor) <= 300;
     }
 
     // Verificar 2 conductores
-    public boolean twoPassengers(ArrayList<Integer> eventosConductor){
+    public boolean dosPasajeros(ArrayList<Integer> eventosConductor){
         HashSet<Integer> set = new HashSet<>();
         for(int i = 1; i < eventosConductor.size(); ++i) {
             if(set.contains(eventosConductor.get(i))) set.remove(eventosConductor.get(i));
