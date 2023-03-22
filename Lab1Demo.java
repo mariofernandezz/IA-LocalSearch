@@ -21,6 +21,7 @@ public class Lab1Demo {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
+        estado.solucionInicial1();
         TSPHillClimbingSearch(estado);
         // TSPSimulatedAnnealingSearch(estado);
     }
