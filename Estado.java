@@ -11,7 +11,7 @@ import static java.lang.Math.abs;
 public class Estado {
 
    /* ATRIBUTOS */
-    private Usuarios u;
+    private final Usuarios u;
     private ArrayList<Usuario> usuarios;
     private ArrayList<ArrayList<Integer>> eventos;
     int M;
@@ -28,11 +28,11 @@ public class Estado {
     }
 
     private void ordenar() {
-        for(int i = 0; i < u.size(); ++i) {
-            if(u.get(i).isConductor()) usuarios.add(u.get(i));
+        for (Usuario usuario : u) {
+            if (usuario.isConductor()) usuarios.add(usuario);
         }
-        for(int i = 0; i < u.size(); ++i) {
-            if(!u.get(i).isConductor()) usuarios.add(u.get(i));
+        for (Usuario usuario : u) {
+            if (!usuario.isConductor()) usuarios.add(usuario);
         }
 
     }
@@ -97,20 +97,79 @@ public class Estado {
         for(int i = 0; i < M; i++) {
             anadirConductor(i);
         }
-
-        // Asignamos conductor a los pasajeros
         int c = 0;
         int p = M;
+        repartirPasajeros(c, p);
+    }
+
+    private void repartirPasajeros(int c, int p) {
+        // Asignamos conductor a los pasajeros
+
+        boolean esValido = true;
         while(p<N && c<M){
-            while(p<N && kilometrajeValido(eventos.get(c))){
+            while(p<N && esValido){
                 anadirPasajero(p, c);
                 p++;
+                esValido = kilometrajeValido(eventos.get(c));
+            }
+            if(!esValido) {
+                p--;
+                eliminarPasajero(p);
+                esValido = true;
             }
             c++;
+            //System.out.println();
         }
         if(p<N) System.out.println("No es solucion");
         else System.out.println("Solucion inicial generada");
+    }
 
+    public void solucionInicial2() {
+        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje.
+        //El conductor escoge pasajeros que esten cerca de su posición.
+
+        // Añadimos todos los conductores a los eventos
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+        }
+
+        // Asignamos conductor a los pasajeros
+        // Asignamos conductor a los pasajeros
+        int c = 0;
+        int p = M;
+        int count = M;
+        boolean esValido = true;
+        while(p<N && c<M){
+            while(p<N && pasajeroCercano(eventos.get(c).get(eventos.get(c).size()-1), p) && esValido){
+                anadirPasajero(p, c);
+                p++;
+                esValido = kilometrajeValido(eventos.get(c));
+                count++;
+            }
+            if(!esValido) {
+                p--;
+                eliminarPasajero(p);
+                esValido = true;
+                count--;
+            }
+            c++;
+            //System.out.println();
+        }
+
+        System.out.println(c + " * " + p + " * " + count);
+        if(count < N) repartirPasajeros(0, count);
+
+        if(p<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
+    }
+
+    private boolean pasajeroCercano(int actual, int nuevo) {
+        int Ax = usuarios.get(actual).getCoordDestinoX();
+        int Ay = usuarios.get(actual).getCoordDestinoY();
+        int Bx = usuarios.get(nuevo).getCoordOrigenX();
+        int By = usuarios.get(nuevo).getCoordOrigenY();
+        //System.out.print(distancia(Ax, Ay, Bx, By) + " ** ");
+        return 50 > distancia(Ax, Ay, Bx, By);
     }
     
 
@@ -134,8 +193,6 @@ public class Estado {
         System.out.println(eventos);
     }
      */
-
-    //public void solucionInicial2() {}
 
     /* CONDICIONES DE APLICABILIDAD */
 
@@ -170,12 +227,13 @@ public class Estado {
                 Bx = usuarios.get(id2).getCoordOrigenX();
                 By = usuarios.get(id2).getCoordOrigenY();
             }
-            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);
+            //System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);
             dist += distancia(Ax, Ay, Bx, By);
             Ax = Bx;
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
+        //System.out.print(dist + " -- ");
         return dist <= 300;
     }
 
