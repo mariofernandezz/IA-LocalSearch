@@ -11,10 +11,15 @@ import static java.lang.Math.abs;
 public class Estado {
 
    /* ATRIBUTOS */
-    private final ArrayList<Usuario> usuarios;
-    private final ArrayList<ArrayList<Integer>> eventos;
+    private ArrayList<Usuario> usuarios;
+    private ArrayList<ArrayList<Integer>> eventos;
     int M;
     int N;
+
+    public static String INTERCAMBIAR_ORDEN = "cambio de orden";
+    public static String CAMBIAR_PASAJERO = "cambio pasajero";
+    public static String ANADIR_CONDUCTOR = "añadir conductor";
+    public static String ELIMINAR_CONDUCTOR = "eliminar conductor";
 
     /*CONSTRUCTOR*/
     public Estado(int n, int m, int seed){
@@ -25,6 +30,21 @@ public class Estado {
         usuarios = new ArrayList<>();
         ordenar(u);
     }
+
+    /*public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
+        N = u.size();
+        M = e.size();
+        usuarios = new ArrayList<>(u);
+        eventos = new ArrayList<>(M);
+        for(int i = 0; i<e.size(); ++i) {
+            eventos.add(new ArrayList<>());
+            for(int j = 0; j<e.get(i).size(); j++) {
+                eventos.get(i).add(e.get(i).get(j));
+            }
+        }
+    }
+    */
+
 
     public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
         N = u.size();
@@ -38,6 +58,7 @@ public class Estado {
             }
         }
     }
+
 
     private void ordenar(Usuarios u) {
         for(int i = 0; i < u.size(); ++i) {
@@ -271,29 +292,6 @@ public class Estado {
         return eventos.toString();
     }
 
-    /*
-    public Estado clone() throws CloneNotSupportedException {
-        Estado copia = (Estado) super.clone();
-        copia.N = this.N;
-        copia.M = this.M;
-        copia.usuarios = this.usuarios;
-        copia.eventos = this.eventos;
-        return copia;
-    }*/
 
-    public Estado deepCopy() {
-        return new Estado(this.getUsuarios(), this.getEventos());
-    }
 
-    /*@Override
-    public Estado clone() {
-        return new Estado(this);
-    }*/
-
-    /* // Guardar el estado padre en una variable
-     * Estado estadoAnterior = estado;
-     *
-     * // Crear sucesor
-     * Estado estadoNuevo = estadoAnterior.clone();
-     */
 }

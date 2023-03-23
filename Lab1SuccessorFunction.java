@@ -10,54 +10,48 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
     public List getSuccessors(Object s){
         List retVal = new ArrayList();
         Estado estado  = (Estado) s;
+        Estado estadoAnterior = estado;
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
 
         // 1. Swap eventos dentro de un mismo conductor
-        /*System.out.println("Tipo 1");
         for (int i=0; i<estado.M; i++){
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ //el primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 for (int k=1; k<j; k++){
-                    if (!Objects.equals(estado.getEventos().get(i).get(j), estado.getEventos().get(i).get(k))) {
-                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());;
-                        //System.out.println(estadoNuevo.getEventos());
+                    if (estado.getEventos().get(i).get(j) != estado.getEventos().get(i).get(k)) {
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.cambiarOrden(i, j, k);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = "heuristic:" + h + "estado: " + estadoNuevo.conversionString();
-                            System.out.println(S);
+                            String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + i + " posiciones " + i + " <--> " + j + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                         }
                     }
                 }
             }
-        }*/
+        }
 
-       // 2. Cambiar pasajero de conductor
-        System.out.println("Tipo 2");
+        // 2. Cambiar pasajero de conductor
         for (int i=0; i<estado.M; i++){
-            System.out.println("i:" + i);
             HashSet<Integer> set = new HashSet<>(); //aparecen dos veces cada indice, solo hacemos nuevo sucesor para uno de ellos
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ //el primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 int p = estado.getEventos().get(i).get(j);
                 if (!set.contains(p)){ //únicamente si es el primer indice
                     set.add(p);
                     if (p<estado.M){
-                        Estado estadoNuevo = estado;
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.eliminarPasajero(p, i);
                         estadoNuevo.anadirConductor(p);
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                        String S = "heuristic:" + h + "estado: " + estadoNuevo.conversionString();
-                        System.out.println(S);
+                        String S = estadoNuevo.ANADIR_CONDUCTOR + " " + p + ", eliminandolo de conductor " + i + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
                         retVal.add(new Successor(S, estadoNuevo));
                     } 
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
-                            Estado estadoNuevo = estado;
+                            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                             estadoNuevo.cambiarConductor(p, null, k);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                                String S = "heuristic:" + h + "estado: " + estadoNuevo.conversionString();
-                                System.out.println(S);
+                                String S = estadoNuevo.CAMBIAR_PASAJERO + " " + p + " --> de conductor " + i + " a conductor " + k + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
                                 retVal.add(new Successor(S, estadoNuevo));
                             }
                         }
@@ -66,27 +60,22 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             }
         }
 
-        /*// 3. Si un conductor solo se lleva a él mismo, ponerlo a otro conductor y eliminarlo
-        System.out.println("Tipo 3");
+        // 3. Si un conductor solo se lleva a él mismo, ponerlo a otro conductor y eliminarlo
         for (int i=0; i<estado.M; i++){
             if (estado.getEventos().get(i).size() == 1) { //solo se conduce a él mismo
                 for (int j=0; j<estado.M; j++){ //conductores donde puedo ponerlo
                     if (estado.getEventos().get(j).size()>0 && i!=j) { 
-                        Estado estadoNuevo = estado.deepCopy();
-                        estadoNuevo.anadirPasajero(19, 0);
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.eliminarConductor(i, j);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = "heuristic:" + h + "estado: " + estadoNuevo.conversionString();
-                            System.out.println(S);
+                            String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + i + " --> a conductor " + j + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                         }
-                        estadoNuevo.anadirConductor(i);
-
                     }
                 }
             }
-        }*/
+        }
 
         return retVal;
     }
