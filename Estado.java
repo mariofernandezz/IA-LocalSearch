@@ -212,4 +212,13 @@ public class Estado {
     public String conversionString(){
         return eventos.toString();
     }
+
+    public Estado clone() throws CloneNotSupportedException {
+        Estado copia = (Estado) super.clone();
+        copia.N = this.N;
+        copia.M = this.M;
+        copia.usuarios = this.usuarios;
+        copia.eventos = this.eventos;
+        return copia;
+    }
 }
