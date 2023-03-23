@@ -74,7 +74,7 @@ public class Estado {
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
 
     /* FUNCIONES AUXILIARES */
-    private int obtenerConductor(int p){
+    public int obtenerConductor(int p){
         for (int i = 0; i < eventos.size(); i++) {
 			for (int j = 0; j < eventos.get(i).size(); j++){
                 if (eventos.get(i).get(j) == p) return i;
@@ -122,7 +122,7 @@ public class Estado {
         return (eventos.get(c).size()-1)/2;
     }
 
-
+    /*
     public void solucionInicial1() {
         //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
@@ -153,6 +153,7 @@ public class Estado {
         else System.out.println("Solucion inicial generada");
 
     }
+    */
     
 
     /*
@@ -176,7 +177,90 @@ public class Estado {
     }
     */
 
-    //public void solucionInicial2() {}
+        public void solucionInicial1() {
+            //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
+            // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
+
+            // Añadimos todos los conductores a los eventos
+            for(int i = 0; i < M; i++) {
+                anadirConductor(i);
+            }
+            int c = 0;
+            int p = M;
+            repartirPasajeros(c, p);
+        }
+
+        private void repartirPasajeros(int c, int p) {
+            // Asignamos conductor a los pasajeros
+
+            boolean esValido = true;
+            while(p<N && c<M){
+                while(p<N && esValido){
+                    anadirPasajero(p, c);
+                    p++;
+                    esValido = kilometrajeValido(eventos.get(c));
+                }
+                if(!esValido) {
+                    p--;
+                    eliminarPasajero(p, null);
+                    esValido = true;
+                }
+                c++;
+                //System.out.println();
+            }
+            if(p<N) System.out.println("No es solucion");
+            else System.out.println("Solucion inicial generada");
+            System.out.println(eventos);
+        }
+
+        public void solucionInicial2() {
+            //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje.
+            //El conductor escoge pasajeros que esten cerca de su posición.
+
+            // Añadimos todos los conductores a los eventos
+            for(int i = 0; i < M; i++) {
+                anadirConductor(i);
+            }
+
+            // Asignamos conductor a los pasajeros
+            // Asignamos conductor a los pasajeros
+            int c = 0;
+            int p = M;
+            int count = M;
+            boolean esValido = true;
+            while(p<N && c<M){
+                while(p<N && pasajeroCercano(eventos.get(c).get(eventos.get(c).size()-1), p) && esValido){
+                    anadirPasajero(p, c);
+                    p++;
+                    esValido = kilometrajeValido(eventos.get(c));
+                    count++;
+                }
+                if(!esValido) {
+                    p--;
+                    eliminarPasajero(p, null);
+                    esValido = true;
+                    count--;
+                }
+                c++;
+                //System.out.println();
+            }
+
+            System.out.println(c + " * " + p + " * " + count);
+            if(count < N) repartirPasajeros(0, count);
+
+            if(p<N) System.out.println("No es solucion");
+            else System.out.println("Solucion inicial generada");
+            //System.out.println(eventos);
+        }
+
+        private boolean pasajeroCercano(int actual, int nuevo) {
+            int Ax = usuarios.get(actual).getCoordDestinoX();
+            int Ay = usuarios.get(actual).getCoordDestinoY();
+            int Bx = usuarios.get(nuevo).getCoordOrigenX();
+            int By = usuarios.get(nuevo).getCoordOrigenY();
+            //System.out.print(distancia(Ax, Ay, Bx, By) + " ** ");
+            return 50 > distancia(Ax, Ay, Bx, By);
+        }
 
     /* CONDICIONES DE APLICABILIDAD */
 

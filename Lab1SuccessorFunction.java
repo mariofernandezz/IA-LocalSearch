@@ -23,7 +23,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                         estadoNuevo.cambiarOrden(i, j, k);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + i + " posiciones " + i + " <--> " + j + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
+                            String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + i + " posiciones " + j + " <--> " + k + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                         }
 
