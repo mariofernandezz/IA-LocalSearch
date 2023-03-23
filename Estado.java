@@ -17,6 +17,11 @@ public class Estado {
     int M;
     int N;
 
+    public static String INTERCAMBIAR_ORDEN = "cambio de orden";
+    public static String CAMBIAR_PASAJERO = "cambio pasajero";
+    public static String ANADIR_CONDUCTOR = "añadir conductor";
+    public static String ELIMINAR_CONDUCTOR = "eliminar conductor";
+
     /*CONSTRUCTOR*/
     public Estado(int n, int m, int seed){
         N = n;
