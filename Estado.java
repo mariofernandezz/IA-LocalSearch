@@ -41,6 +41,19 @@ public class Estado {
         this.usuarios = otro.usuarios;
     }
 
+    // Método clone()
+    @Override
+    public Estado clone() {
+        return new Estado(this);
+    }
+
+    /* // Guardar el estado padre en una variable
+     * Estado estadoAnterior = estado;
+     * 
+     * // Crear sucesor
+     * Estado estadoNuevo = estadoAnterior.clone();
+     */
+
     private void ordenar() {
         for(int i = 0; i < u.size(); ++i) {
             if(u.get(i).isConductor()) usuarios.add(u.get(i));
