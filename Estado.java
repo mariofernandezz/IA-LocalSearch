@@ -33,6 +33,14 @@ public class Estado {
         usuarios = new ArrayList<>();
     }
 
+    // Para copiar un Estado 'a' a 'b' y que no apunte al mismo sitio en memoria.
+    public Estado(Estado otro) {
+        this.N = otro.N;
+        this.M = otro.M;
+        this.eventos = otro.eventos;
+        this.usuarios = otro.usuarios;
+    }
+
     private void ordenar() {
         for(int i = 0; i < u.size(); ++i) {
             if(u.get(i).isConductor()) usuarios.add(u.get(i));
@@ -190,10 +198,10 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return dist;
+        return dist; // Se devuelve en centenares de metros
     }
 
-    // Verificar Kilometraje (max 30km = 300 manzanas)
+    // Verificar Kilometraje (max 30km = 300 manzanas = 300 centenares de metros)
     public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
         return kilometrajeConductor(eventosConductor) <= 300;
     }
@@ -205,22 +213,6 @@ public class Estado {
             if(set.contains(eventosConductor.get(i))) set.remove(eventosConductor.get(i));
             else if (set.size() == 2) return false;
             else set.add(eventosConductor.get(i));
-        }
-        return true;
-    }
-
-    // Verificar si hay algun conductor que no lleve a ningun pasajero
-    public boolean conductoresSinPasajeros() {
-        for(int i = 0; i < eventos.size(); ++i) {
-            if (eventos.get(i).size() == 1) return true;
-        }
-        return false;
-    }
-
-    // Verificar si estan todos los posibles conductores conduciendo
-    public boolean todosConduciendo() {
-        for(int i = 0; i < eventos.size(); ++i) {
-            if (eventos.get(i).size() == 0) return false;
         }
         return true;
     }
