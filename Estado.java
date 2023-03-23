@@ -213,6 +213,7 @@ public class Estado {
         return eventos.toString();
     }
 
+    /*
     public Estado clone() throws CloneNotSupportedException {
         Estado copia = (Estado) super.clone();
         copia.N = this.N;
@@ -220,9 +221,21 @@ public class Estado {
         copia.usuarios = this.usuarios;
         copia.eventos = this.eventos;
         return copia;
-    }
+    }*/
 
     public Estado deepCopy() {
         return new Estado(this.getUsuarios(), this.getEventos());
     }
+
+    @Override
+    public Estado clone() {
+        return new Estado(this);
+    }
+
+    /* // Guardar el estado padre en una variable
+     * Estado estadoAnterior = estado;
+     * 
+     * // Crear sucesor
+     * Estado estadoNuevo = estadoAnterior.clone();
+     */
 }
