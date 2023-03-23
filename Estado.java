@@ -221,4 +221,8 @@ public class Estado {
         copia.eventos = this.eventos;
         return copia;
     }
+
+    public Estado deepCopy() {
+        return new Estado(this.getUsuarios(), this.getEventos());
+    }
 }

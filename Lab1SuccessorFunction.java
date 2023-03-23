@@ -74,7 +74,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             if (estado.getEventos().get(i).size() == 1) { //solo se conduce a él mismo
                 for (int j=0; j<estado.M; j++){ //conductores donde puedo ponerlo
                     if (estado.getEventos().get(j).size()>0 && i!=j) { 
-                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                        Estado estadoNuevo = estado.deepCopy();
+                        estadoNuevo.anadirPasajero(19, 0);
                         estadoNuevo.eliminarConductor(i, j);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
