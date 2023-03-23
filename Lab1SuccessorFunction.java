@@ -20,7 +20,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ //el primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 for (int k=1; k<j; k++){
                     if (estado.getEventos().get(i).get(j) != estado.getEventos().get(i).get(k)) {
-                        Estado estadoNuevo = estadoAnterior.clone();
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.cambiarOrden(i, j, k);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -44,7 +44,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                 if (!set.contains(p)){ //únicamente si es el primer indice
                     set.add(p);
                     if (p<estado.M){
-                        Estado estadoNuevo = estadoAnterior.clone();
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.eliminarPasajero(p, i);
                         estadoNuevo.anadirConductor(p);
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -54,7 +54,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     } 
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
-                            Estado estadoNuevo = estadoAnterior.clone();
+                            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                             estadoNuevo.cambiarConductor(p, null, k);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -75,8 +75,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             if (estado.getEventos().get(i).size() == 1) { //solo se conduce a él mismo
                 for (int j=0; j<estado.M; j++){ //conductores donde puedo ponerlo
                     if (estado.getEventos().get(j).size()>0 && i!=j) { 
-                        Estado estadoNuevo = estadoAnterior.clone();
-                        estadoNuevo.anadirPasajero(19, 0);
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());                        estadoNuevo.anadirPasajero(19, 0);
                         estadoNuevo.eliminarConductor(i, j);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
