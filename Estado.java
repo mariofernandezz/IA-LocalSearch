@@ -11,7 +11,6 @@ import static java.lang.Math.abs;
 public class Estado {
 
    /* ATRIBUTOS */
-    private final Usuarios u;
     private ArrayList<Usuario> usuarios;
     private ArrayList<ArrayList<Integer>> eventos;
     int M;
@@ -21,22 +20,22 @@ public class Estado {
     public Estado(int n, int m, int seed){
         N = n;
         M = m;
-        u = new Usuarios(N, M, seed);
+        Usuarios u = new Usuarios(N, M, seed);
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
-        ordenar();
+        ordenar(u);
     }
 
-    public Estado(ArrayList<Usuario> usuarios, ArrayList<ArrayList<Integer>> eventos){
-        N = usuarios.size();
-        M = eventos.size();
-        eventos = new ArrayList<ArrayList<Integer>>(M);
-        usuarios = new ArrayList<>();
+    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
+        N = u.size();
+        M = e.size();
+        eventos = e;
+        usuarios = u;
     }
 
-    private void ordenar() {
-        for (Usuario usuario : u) {
-            if (usuario.isConductor()) usuarios.add(usuario);
+    private void ordenar(Usuarios u) {
+        for(int i = 0; i < u.size(); ++i) {
+            if(u.get(i).isConductor()) usuarios.add(u.get(i));
         }
         for (Usuario usuario : u) {
             if (!usuario.isConductor()) usuarios.add(usuario);
@@ -45,7 +44,6 @@ public class Estado {
     }
 
     public ArrayList<Usuario> getUsuarios(){ return usuarios;}
-    public Usuarios getUsuarios2(){ return u;}
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
 
     /* FUNCIONES AUXILIARES */
@@ -111,38 +109,6 @@ public class Estado {
         repartirPasajeros(c, p);
     }
 
-    private void repartirPasajeros(int c, int p) {
-        // Asignamos conductor a los pasajeros
-
-        boolean esValido = true;
-        while(p<N && c<M){
-            while(p<N && esValido){
-                anadirPasajero(p, c);
-                p++;
-                esValido = kilometrajeValido(eventos.get(c));
-            }
-            if(!esValido) {
-                p--;
-                eliminarPasajero(p);
-                esValido = true;
-            }
-            c++;
-            //System.out.println();
-        }
-        if(p<N) System.out.println("No es solucion");
-        else System.out.println("Solucion inicial generada");
-    }
-
-    public void solucionInicial2() {
-        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje.
-        //El conductor escoge pasajeros que esten cerca de su posición.
-
-        // Añadimos todos los conductores a los eventos
-        for(int i = 0; i < M; i++) {
-            anadirConductor(i);
-        }
-
-        // Asignamos conductor a los pasajeros
         // Asignamos conductor a los pasajeros
         int c = 0;
         int p = M;
@@ -219,6 +185,7 @@ public class Estado {
     }
 
     public int kilometrajeConductor(ArrayList<Integer> eventosConductor){
+        if (eventosConductor.size() == 0) return 0;
         int dist = 0;
         int c = eventosConductor.get(0);
         int Ax, Ay, Bx, By;
@@ -259,4 +226,34 @@ public class Estado {
         }
         return true;
     }
+
+    public String conversionString(){
+        return eventos.toString();
+    }
+
+    /*
+    public Estado clone() throws CloneNotSupportedException {
+        Estado copia = (Estado) super.clone();
+        copia.N = this.N;
+        copia.M = this.M;
+        copia.usuarios = this.usuarios;
+        copia.eventos = this.eventos;
+        return copia;
+    }*/
+
+    public Estado deepCopy() {
+        return new Estado(this.getUsuarios(), this.getEventos());
+    }
+
+    @Override
+    public Estado clone() {
+        return new Estado(this);
+    }
+
+    /* // Guardar el estado padre en una variable
+     * Estado estadoAnterior = estado;
+     *
+     * // Crear sucesor
+     * Estado estadoNuevo = estadoAnterior.clone();
+     */
 }
