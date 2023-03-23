@@ -227,6 +227,13 @@ public class Estado {
         return new Estado(this.getUsuarios(), this.getEventos());
     }
 
+    public Estado(Estado otro) {
+        this.N = otro.N;
+        this.M = otro.M;
+        this.eventos = otro.eventos;
+        this.usuarios = otro.usuarios;
+    }
+
     @Override
     public Estado clone() {
         return new Estado(this);
