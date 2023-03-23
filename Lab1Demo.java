@@ -21,14 +21,14 @@ public class Lab1Demo {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial1();
+        estado.solucionInicial2();
         System.out.println(estado.conversionString());
-        TSPHillClimbingSearch(estado);
-        // TSPSimulatedAnnealingSearch(estado);
+        //Lab1HillClimbingSearch(estado);
+        Lab1SimulatedAnnealingSearch(estado);
     }
         
-        private static void TSPHillClimbingSearch(Estado estado) {
-            System.out.println("\nTSP HillClimbing  -->");
+        private static void Lab1HillClimbingSearch(Estado estado) {
+            System.out.println("\nLab1 HillClimbing  -->");
             try {
                 Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
                 Search search =  new HillClimbingSearch();
@@ -36,15 +36,14 @@ public class Lab1Demo {
                 
                 System.out.println();
                 printActions(agent.getActions());
-                System.out.println("\nTSP HillClimbing  -->");
                 printInstrumentation(agent.getInstrumentation());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         
-        private static void TSPSimulatedAnnealingSearch(Estado estado) {
-            System.out.println("\nTSP Simulated Annealing  -->");
+        private static void Lab1SimulatedAnnealingSearch(Estado estado) {
+            System.out.println("\nLab1 Simulated Annealing  -->");
             try {
                 Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(2000,100,5,0.001);
