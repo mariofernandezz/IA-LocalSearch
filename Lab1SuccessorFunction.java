@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-
-
 import aima.search.framework.Successor;
 import aima.search.framework.SuccessorFunction;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class Lab1SuccessorFunction implements SuccessorFunction {
     
@@ -14,12 +13,13 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
 
         // 1. Swap eventos dentro de un mismo conductor
-        System.out.println("Tipo 1");
+        /*System.out.println("Tipo 1");
         for (int i=0; i<estado.M; i++){
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ //el primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 for (int k=1; k<j; k++){
-                    if (estado.getEventos().get(i).get(j) != estado.getEventos().get(i).get(k)) {
-                        Estado estadoNuevo = estado;
+                    if (!Objects.equals(estado.getEventos().get(i).get(j), estado.getEventos().get(i).get(k))) {
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());;
+                        //System.out.println(estadoNuevo.getEventos());
                         estadoNuevo.cambiarOrden(i, j, k);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -27,13 +27,12 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                             System.out.println(S);
                             retVal.add(new Successor(S, estadoNuevo));
                         }
-
                     }
                 }
             }
-        }
+        }*/
 
-        // 2. Cambiar pasajero de conductor
+       // 2. Cambiar pasajero de conductor
         System.out.println("Tipo 2");
         for (int i=0; i<estado.M; i++){
             System.out.println("i:" + i);
@@ -43,7 +42,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                 if (!set.contains(p)){ //únicamente si es el primer indice
                     set.add(p);
                     if (p<estado.M){
-                        Estado estadoNuevo = estado; 
+                        Estado estadoNuevo = estado;
                         estadoNuevo.eliminarPasajero(p, i);
                         estadoNuevo.anadirConductor(p);
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -53,7 +52,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     } 
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
-                            Estado estadoNuevo = estado; 
+                            Estado estadoNuevo = estado;
                             estadoNuevo.cambiarConductor(p, null, k);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -61,14 +60,13 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                                 System.out.println(S);
                                 retVal.add(new Successor(S, estadoNuevo));
                             }
-
                         }
                     }
                 }
             }
         }
 
-        // 3. Si un conductor solo se lleva a él mismo, ponerlo a otro conductor y eliminarlo
+        /*// 3. Si un conductor solo se lleva a él mismo, ponerlo a otro conductor y eliminarlo
         System.out.println("Tipo 3");
         for (int i=0; i<estado.M; i++){
             if (estado.getEventos().get(i).size() == 1) { //solo se conduce a él mismo
@@ -88,7 +86,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     }
                 }
             }
-        }
+        }*/
 
         return retVal;
     }

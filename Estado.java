@@ -11,8 +11,8 @@ import static java.lang.Math.abs;
 public class Estado {
 
    /* ATRIBUTOS */
-    private ArrayList<Usuario> usuarios;
-    private ArrayList<ArrayList<Integer>> eventos;
+    private final ArrayList<Usuario> usuarios;
+    private final ArrayList<ArrayList<Integer>> eventos;
     int M;
     int N;
 
@@ -29,8 +29,14 @@ public class Estado {
     public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
         N = u.size();
         M = e.size();
-        eventos = e;
-        usuarios = u;
+        usuarios = new ArrayList<>(u);
+        eventos = new ArrayList<>(M);
+        for(int i = 0; i<e.size(); ++i) {
+            eventos.add(new ArrayList<>());
+            for(int j = 0; j<e.get(i).size(); j++) {
+                eventos.get(i).add(e.get(i).get(j));
+            }
+        }
     }
 
     private void ordenar(Usuarios u) {
@@ -109,6 +115,39 @@ public class Estado {
         repartirPasajeros(c, p);
     }
 
+    private void repartirPasajeros(int c, int p) {
+        // Asignamos conductor a los pasajeros
+
+        boolean esValido = true;
+        while(p<N && c<M){
+            while(p<N && esValido){
+                anadirPasajero(p, c);
+                p++;
+                esValido = kilometrajeValido(eventos.get(c));
+            }
+            if(!esValido) {
+                p--;
+                eliminarPasajero(p, null);
+                esValido = true;
+            }
+            c++;
+            //System.out.println();
+        }
+        if(p<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
+        System.out.println(eventos);
+    }
+
+    public void solucionInicial2() {
+        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje.
+        //El conductor escoge pasajeros que esten cerca de su posición.
+
+        // Añadimos todos los conductores a los eventos
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+        }
+
+        // Asignamos conductor a los pasajeros
         // Asignamos conductor a los pasajeros
         int c = 0;
         int p = M;
@@ -123,7 +162,7 @@ public class Estado {
             }
             if(!esValido) {
                 p--;
-                eliminarPasajero(p);
+                eliminarPasajero(p, null);
                 esValido = true;
                 count--;
             }
@@ -136,6 +175,7 @@ public class Estado {
 
         if(p<N) System.out.println("No es solucion");
         else System.out.println("Solucion inicial generada");
+        //System.out.println(eventos);
     }
 
     private boolean pasajeroCercano(int actual, int nuevo) {
@@ -245,10 +285,10 @@ public class Estado {
         return new Estado(this.getUsuarios(), this.getEventos());
     }
 
-    @Override
+    /*@Override
     public Estado clone() {
         return new Estado(this);
-    }
+    }*/
 
     /* // Guardar el estado padre en una variable
      * Estado estadoAnterior = estado;

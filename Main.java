@@ -1,14 +1,7 @@
-import java.util.Scanner;
 import IA.Comparticion.Usuario;
-import IA.Comparticion.Usuarios;
-import java.util.ArrayList;
-import java.util.HashSet;
 
-import aima.search.framework.Problem;
-import aima.search.framework.Search;
-import aima.search.framework.SearchAgent;
-import aima.search.informed.HillClimbingSearch;
-import aima.search.informed.SimulatedAnnealingSearch;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Main {
@@ -78,13 +71,15 @@ public class Main {
 
         System.out.println(estado.numeroPasajeros(0));
 */
-        
+
         estado.solucionInicial1();
+        //estado.solucionInicial2();
+
         for(int i = 0; i < estado.getEventos().size(); i++) {
             ArrayList<Integer> e1 = estado.getEventos().get(i);
             System.out.println("Conductor: " + i + " Eventos: " + e1);
         }
-        
+
         // estado.solucionInicial2();
 
         //**************** Estado Inicial *********************
