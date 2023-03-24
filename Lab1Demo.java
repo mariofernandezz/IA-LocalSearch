@@ -21,16 +21,16 @@ public class Lab1Demo {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial2();
+        estado.solucionInicial1();
         System.out.println(estado.conversionString());
-        //Lab1HillClimbingSearch(estado);
-        Lab1SimulatedAnnealingSearch(estado);
+        Lab1HillClimbingSearch(estado);
+        //Lab1SimulatedAnnealingSearch(estado);
     }
         
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 

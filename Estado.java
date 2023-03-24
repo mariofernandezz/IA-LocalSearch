@@ -83,6 +83,14 @@ public class Estado {
         return -1;
     }
 
+    public int numeroConductores(){
+        int ncond = 0;
+        for (int i=0; i<M; i++){
+            if (eventos.get(i).size()>0) ncond += 1;
+        }
+        return ncond;
+    }
+
     /* OPERADORES */
     public void anadirConductor(int c){
         if (eventos.size() < M) eventos.add(new ArrayList<>());

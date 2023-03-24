@@ -20,7 +20,7 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
     public List getSuccessors(Object s){
         List retVal = new ArrayList();
         Estado estado  = (Estado) s;
-        Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
+        Lab1HeuristicFunction2 Lab1HF  = new Lab1HeuristicFunction2();
         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
 
         // Escogemos de forma aleatoria el operador a usar para crear el sucesor
@@ -41,7 +41,8 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                         estadoNuevo.cambiarOrden(Conductor, evento1, evento2);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(Conductor))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + Conductor + " posiciones " + evento1 + " <--> " + evento2 + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
+                            int ncond = estadoNuevo.numeroConductores();
+                            String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + Conductor + " posiciones " + evento1 + " <--> " + evento2 + " con coste: " + h + " ncond: " + ncond + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                             return retVal;
                         }
@@ -62,7 +63,8 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                         estadoNuevo.cambiarConductor(Pasajero, Conductor1, Conductor2);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = estadoNuevo.CAMBIAR_PASAJERO + " " + Pasajero + " --> de conductor " + Conductor1 + " a conductor " + Conductor2 + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
+                            int ncond = estadoNuevo.numeroConductores();
+                            String S = estadoNuevo.CAMBIAR_PASAJERO + " " + Pasajero + " --> de conductor " + Conductor1 + " a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                             return retVal;
                         }
@@ -80,7 +82,8 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                         estadoNuevo.eliminarConductor(Conductor1, Conductor2);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                            String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + Conductor1 + " --> a conductor " + Conductor2 + " con coste: " + h + " estado: " + estadoNuevo.conversionString();
+                            int ncond = estadoNuevo.numeroConductores();
+                            String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + Conductor1 + " --> a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond +  " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
                             return retVal;
                         }
@@ -96,7 +99,8 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                     estadoNuevo.eliminarPasajero(NuevoConductor, ConductorDelNuevoConductor);
                     estadoNuevo.anadirConductor(NuevoConductor);
                     double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                    String S = estadoNuevo.ANADIR_CONDUCTOR + " heuristic:" + h + " estado: " + estadoNuevo.conversionString();
+                    int ncond = estadoNuevo.numeroConductores();
+                    String S = estadoNuevo.ANADIR_CONDUCTOR + " heuristic:" + h + " ncond: " + ncond + " estado: " + estadoNuevo.conversionString();
                     retVal.add(new Successor(S, estadoNuevo));
                     return retVal;
                 }

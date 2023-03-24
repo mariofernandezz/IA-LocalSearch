@@ -24,7 +24,7 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
                 sum += estado.kilometrajeConductor(eventos.get(i));
             }
         }
-        return (sum + 300*ncond);
+        return (sum*ncond);
     }
   
 }
