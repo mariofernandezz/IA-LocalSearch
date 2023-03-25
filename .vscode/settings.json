@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Comparticion.jar",
+        "AIMA.jar"
+    ]
+}
