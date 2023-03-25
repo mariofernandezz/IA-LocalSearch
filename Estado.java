@@ -372,6 +372,8 @@ public class Estado {
             Ay = By;
         }
         distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
+        int distVacia = 300 - distTotal;
+        distLibre += distVacia * 2;
         return distTotal + distLibre; // Manzanas
     }
 
@@ -411,21 +413,32 @@ public class Estado {
 
         List<List<Integer>> centroConductores = new ArrayList<List<Integer>>();
 
-        // Añadimos todos los conductores a los eventos y calculamos el centro de sus trayectos al trabajo
-        for(int i = 0; i < M; i++) {
-            anadirConductor(i);
-            List<Integer> driverList = new ArrayList<>();
-            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
-            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
-            centroConductores.add(driverList);
-        }
-
         // Definimos el radio de la zona considerada cercana para los conductores, según el número que haya
         // X conductores --> r = 100/raiz(X) * 2 (x lado)
         int a = 1;
         while (a*a <= M) a++;
         a--;
         int radio = (int) Math.ceil(M/(a*2));
+
+        // Añadimos nuevos conductores a menos que estén en la zona de uno ya añadido
+        for(int i = 0; i < M; i++) {
+            boolean asignado = false;
+            for(int j = 0; j < i; j++){
+                if (centroConductores.get(j).size() > 0){
+                    if (dentroZona(centroConductores.get(j).get(0), centroConductores.get(j).get(0), i, radio)){
+                        anadirPasajero(i, j); // Conductor dentro de la zona de otro
+                        if (kilometrajeValido(eventos.get(j))) asignado = true; else eliminarPasajero(i, j); 
+                    }
+                }
+            }
+            if(!asignado){
+                anadirConductor(i);
+                List<Integer> driverList = new ArrayList<>();
+                driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
+                driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
+                centroConductores.add(driverList);
+            }
+        }
 
         // Asignamos conductor a los pasajeros, intentando primero que estén dentro de la zona del conductor
         int pasajero = M;
@@ -452,7 +465,4 @@ public class Estado {
         else System.out.println("Solucion inicial generada");
 
     }
-
-    
-
 }
