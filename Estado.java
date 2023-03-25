@@ -2,6 +2,7 @@
 
 import IA.Comparticion.Usuario;
 import IA.Comparticion.Usuarios;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -41,7 +42,7 @@ public class Estado {
         for (int i = 0; i < M; i++) {
             ArrayList<Integer> aux = (ArrayList<Integer>) e.get(i).clone();
             eventos.add(aux);
-        }
+    }
     }
     */
 
@@ -317,7 +318,7 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return dist;
+        return dist; // Manzanas
     }
 
     // Verificar Kilometraje (max 30km = 300 manzanas)
@@ -338,6 +339,42 @@ public class Estado {
 
     public String conversionString(){
         return eventos.toString();
+    }
+    
+    // HEURÍSTICA 2 DE HÉCTOR
+    public int kilometrajeConductor_manzanasLibres (ArrayList<Integer> eventosConductor) {
+        int dist = 0;
+        int distTotal = 0;
+        int distLibre = 0; // De momento solo tiene en cuenta la dist libre hasta el fin del trayecto. Para penalizar coches con trayecto muy corto se puede penalizar hasta 300.
+        int plazasLibres = 2;
+        int c = eventosConductor.get(0);
+        int Ax, Ay, Bx, By;
+        Ax = usuarios.get(c).getCoordOrigenX();
+        Ay = usuarios.get(c).getCoordOrigenY();
+        HashSet<Integer> set = new HashSet<>();
+        for(int i = 1; i < eventosConductor.size() && distTotal <= 300; i++) {
+            int id2 = eventosConductor.get(i);
+            int plazasLibresActual = plazasLibres;
+            if(set.contains(id2)) {
+                plazasLibres ++; // Se libera un asiento
+                Bx = usuarios.get(id2).getCoordDestinoX();
+                By = usuarios.get(id2).getCoordDestinoY();
+            } else {
+                plazasLibres --; // Se ocupa un asiento
+                set.add(id2);
+                Bx = usuarios.get(id2).getCoordOrigenX();
+                By = usuarios.get(id2).getCoordOrigenY();
+            }
+            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);  
+            dist = distancia(Ax, Ay, Bx, By);
+            if (plazasLibresActual == 2) distLibre += 2*dist; // La dist se recorre con dos asientos libres
+            else if (plazasLibresActual == 1) distLibre += dist; // La dist se recorre con un asiento libre
+            distTotal += dist;
+            Ax = Bx;
+            Ay = By;
+        }
+        distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
+        return distTotal + distLibre; // Manzanas
     }
 
     
