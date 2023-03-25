@@ -72,6 +72,7 @@ public class Estado {
 
     public ArrayList<Usuario> getUsuarios(){ return usuarios;}
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
+    public int getM(){ return M;}
 
     /* FUNCIONES AUXILIARES */
     public int obtenerConductor(int p){
@@ -283,6 +284,14 @@ public class Estado {
 
     private int distancia(int Ax, int Ay, int Bx, int By){
         return abs(Ax - Bx) + abs(Ay - By);
+    }
+
+    public int kilometrajeSolucion(){
+        int sum = 0;
+        for (int i=0; i<M; i++){
+            sum += kilometrajeConductor(eventos.get(i));
+        }
+        return sum;
     }
 
     public int kilometrajeConductor(ArrayList<Integer> eventosConductor){
