@@ -268,7 +268,6 @@ public class Estado {
             int Ay = usuarios.get(actual).getCoordDestinoY();
             int Bx = usuarios.get(nuevo).getCoordOrigenX();
             int By = usuarios.get(nuevo).getCoordOrigenY();
-            //System.out.print(distancia(Ax, Ay, Bx, By) + " ** ");
             return 50 > distancia(Ax, Ay, Bx, By);
         }
 
@@ -365,7 +364,6 @@ public class Estado {
                 Bx = usuarios.get(id2).getCoordOrigenX();
                 By = usuarios.get(id2).getCoordOrigenY();
             }
-            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);  
             dist = distancia(Ax, Ay, Bx, By);
             if (plazasLibresActual == 2) distLibre += 2*dist; // La dist se recorre con dos asientos libres
             else if (plazasLibresActual == 1) distLibre += dist; // La dist se recorre con un asiento libre
@@ -375,6 +373,84 @@ public class Estado {
         }
         distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
         return distTotal + distLibre; // Manzanas
+    }
+
+    private int mitadCamino (int a, int b){
+        double orig = (double) a;
+        double dest = (double) b;
+        int retVal;
+        // Redondeamos a lo que esté más cerca del origen.
+        if (orig >= dest) {
+            retVal = (int) Math.ceil((orig-dest)/2);
+        } else {
+            retVal = (int) Math.floor((dest-orig)/2);
+        }
+        return retVal;
+    }
+
+    private boolean dentroZona (int CondX, int CondY, int Pasajero, int rad) {
+        int minX = CondX - rad;
+        int maxX = CondX + rad;
+        int minY = CondY - rad;
+        int maxY = CondY + rad;
+        int PorigX = usuarios.get(Pasajero).getCoordOrigenX();
+        int PorigY = usuarios.get(Pasajero).getCoordOrigenY();
+        int PdestX = usuarios.get(Pasajero).getCoordDestinoX();
+        int PdestY = usuarios.get(Pasajero).getCoordDestinoY();
+
+        if (PorigX > minX && PorigX < maxX && PorigY > minY && PorigY < maxY) {
+            if (PdestX > minX && PdestX < maxX && PdestY > minY && PdestY < maxY) return true;
+        }
+        return false;
+    }
+
+    // Hay 10.000 posiciones. Decir que un punto está en la zona de un conductor si está en un radio con centro la mitad entre su origen y destino.
+    // Por cada cuatro conductores, el 'radio' por cada eje se restringe a un cuarto.
+    public void solucionInicial3() {
+        // Sería interesante que condujeran aquellos con mayor distancia entre orig. y dest. ya que pueden haber más pasajeros dentro
+
+        List<List<Integer>> centroConductores = new ArrayList<List<Integer>>();
+
+        // Añadimos todos los conductores a los eventos y calculamos el centro de sus trayectos al trabajo
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+            List<Integer> driverList = new ArrayList<>();
+            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
+            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
+            centroConductores.add(driverList);
+        }
+
+        // Definimos el radio de la zona considerada cercana para los conductores, según el número que haya
+        // X conductores --> r = 100/raiz(X) * 2 (x lado)
+        int a = 1;
+        while (a*a <= M) a++;
+        a--;
+        int radio = (int) Math.ceil(M/(a*2));
+
+        // Asignamos conductor a los pasajeros, intentando primero que estén dentro de la zona del conductor
+        int pasajero = M;
+        while(pasajero<N) {
+            boolean asignado = false;
+            int conductor = 0;
+            int primer_conductor_disponible = -1;
+            while(!asignado && conductor<M) {
+                anadirPasajero(pasajero, conductor);
+                if (kilometrajeValido(eventos.get(conductor))) {
+                    if (primer_conductor_disponible == -1) {
+                        primer_conductor_disponible = conductor;
+                    }
+                    if (dentroZona(centroConductores.get(conductor).get(0), centroConductores.get(conductor).get(0), pasajero, radio)) {
+                        asignado = true;
+                    } else eliminarPasajero(pasajero, conductor);                    
+                } else eliminarPasajero(pasajero, conductor);
+                conductor++;
+            }
+            if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else break;
+            pasajero++;
+        }
+        if(pasajero<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
+
     }
 
     
