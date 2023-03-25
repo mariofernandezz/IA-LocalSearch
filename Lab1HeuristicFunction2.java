@@ -1,3 +1,9 @@
+// DEFINICIÓN DE LA FUNCIÓN HEURISTICA 2
+
+// Penalizar manzanas sin pasajeros completos (antes de acabar la trayectoria?)
+
+// Solución Inicial --> Poner a cada conductor pasajeros dentro del rectangulo de su path.
+
 import java.util.ArrayList;
 
 import aima.search.framework.HeuristicFunction;
@@ -17,14 +23,12 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
         Estado estado = (Estado)s;
         ArrayList<ArrayList<Integer>> eventos = estado.getEventos();
         int sum = 0;
-        int ncond = 0;
         for (int i=0; i<estado.M; i++){
             if (eventos.get(i).size()>0) {
-                ncond+=1;
-                sum += estado.kilometrajeConductor(eventos.get(i));
+                sum += estado.kilometrajeConductor_manzanasLibres(eventos.get(i));
             }
         }
-        return (sum + ncond);
+        return sum;
     }
   
 }

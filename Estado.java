@@ -33,27 +33,6 @@ public class Estado {
         usuarios = new ArrayList<>();
     }
 
-    // Para copiar un Estado 'a' a 'b' y que no apunte al mismo sitio en memoria.
-    public Estado(Estado otro) {
-        this.N = otro.N;
-        this.M = otro.M;
-        this.eventos = otro.eventos;
-        this.usuarios = otro.usuarios;
-    }
-
-    // Método clone()
-    @Override
-    public Estado clone() {
-        return new Estado(this);
-    }
-
-    /* // Guardar el estado padre en una variable
-     * Estado estadoAnterior = estado;
-     * 
-     * // Crear sucesor
-     * Estado estadoNuevo = estadoAnterior.clone();
-     */
-
     private void ordenar() {
         for(int i = 0; i < u.size(); ++i) {
             if(u.get(i).isConductor()) usuarios.add(u.get(i));
@@ -69,7 +48,7 @@ public class Estado {
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
 
     /* FUNCIONES AUXILIARES */
-    public int obtenerConductor(int p){
+    private int obtenerConductor(int p){
         for (int i = 0; i < eventos.size(); i++) {
 			for (int j = 0; j < eventos.get(i).size(); j++){
                 if (eventos.get(i).get(j) == p) return i;
@@ -80,7 +59,7 @@ public class Estado {
 
     /* OPERADORES */
     public void anadirConductor(int c){
-        eventos.add(new ArrayList<>()); // CUIDADO CON ESTO A LA HORA DE AÑADIR UN NUEVO CONDUCTOR!!
+        eventos.add(new ArrayList<>());
         eventos.get(c).add(c);
     }
 
@@ -121,6 +100,59 @@ public class Estado {
     public void solucionInicial1() {
         //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
+
+        // Añadimos todos los conductores a los eventos
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+        }
+
+        // Asignamos conductor a los pasajeros
+        int c = 0;
+        int p = M;
+        boolean esValido = true;
+        while(p<N && c<M){
+            while(p<N && esValido){
+                anadirPasajero(p, c);
+                p++;
+                esValido = kilometrajeValido(eventos.get(c));
+            }
+            if (! esValido){
+                p--;
+                eliminarPasajero(p, c);
+                esValido = true;
+            }
+            c++;
+        }
+        if(p<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
+
+    }
+
+    private int mitadCamino (int a, int b){
+        double orig = (double) a;
+        double dest = (double) b;
+        int retVal;
+        // Redondeamos a lo que esté más cerca del origen.
+        if (orig >= dest) {
+            retVal = (int) Math.ceil((orig-dest)/2);
+        } else {
+            retVal = (int) Math.floor((dest-orig)/2);
+        }
+        return retVal;
+    }
+
+    private boolean dentroZona (int Condx, int CondY, int Porigx, int PorigY, int PdestX, int PdestY, int radX, int radY) {
+        if () {}
+            if () return true;
+        }
+        return false;
+    }
+    // Hay 10.000 posiciones. Decir que un punto está en la zona de un conductor si está en un radio con centro la mitad entre su origen y destino.
+    // Por cada cuatro conductores, el 'radio' por cada eje se restringe a la mitad.
+    public void solucionInicial2() {
+        // Sería interesante que condujeran aquellos con mayor distancia entre orig. y dest. ya que pueden haber más pasajeros dentro
+
+        List<List<Integer>> centroConductores = new ArrayList<>(M);
 
         // Añadimos todos los conductores a los eventos
         for(int i = 0; i < M; i++) {
@@ -211,10 +243,10 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return dist; // Se devuelve en centenares de metros
+        return dist; // Manzanas
     }
 
-    // Verificar Kilometraje (max 30km = 300 manzanas = 300 centenares de metros)
+    // Verificar Kilometraje (max 30km = 300 manzanas)
     public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
         return kilometrajeConductor(eventosConductor) <= 300;
     }
@@ -228,5 +260,40 @@ public class Estado {
             else set.add(eventosConductor.get(i));
         }
         return true;
+    }
+
+    public int kilometrajeConductor_manzanasLibres (ArrayList<Integer> eventosConductor) {
+        int dist = 0;
+        int distTotal = 0;
+        int distLibre = 0; // De momento solo tiene en cuenta la dist libre hasta el fin del trayecto. Para penalizar coches con trayecto muy corto se puede penalizar hasta 300.
+        int plazasLibres = 2;
+        int c = eventosConductor.get(0);
+        int Ax, Ay, Bx, By;
+        Ax = usuarios.get(c).getCoordOrigenX();
+        Ay = usuarios.get(c).getCoordOrigenY();
+        HashSet<Integer> set = new HashSet<>();
+        for(int i = 1; i < eventosConductor.size() && distTotal <= 300; i++) {
+            int id2 = eventosConductor.get(i);
+            int plazasLibresActual = plazasLibres;
+            if(set.contains(id2)) {
+                plazasLibres ++; // Se libera un asiento
+                Bx = usuarios.get(id2).getCoordDestinoX();
+                By = usuarios.get(id2).getCoordDestinoY();
+            } else {
+                plazasLibres --; // Se ocupa un asiento
+                set.add(id2);
+                Bx = usuarios.get(id2).getCoordOrigenX();
+                By = usuarios.get(id2).getCoordOrigenY();
+            }
+            System.out.println(Ax + ", " + Ay + ", " + Bx + ", " + By);  
+            dist = distancia(Ax, Ay, Bx, By);
+            if (plazasLibresActual == 2) distLibre += 2*dist; // La dist se recorre con dos asientos libres
+            else if (plazasLibresActual == 1) distLibre += dist; // La dist se recorre con un asiento libre
+            distTotal += dist;
+            Ax = Bx;
+            Ay = By;
+        }
+        distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
+        return distTotal + distLibre; // Manzanas
     }
 }
