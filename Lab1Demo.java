@@ -21,10 +21,10 @@ public class Lab1Demo {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial2();
+        estado.solucionInicial3();
         System.out.println(estado.conversionString());
-        //Lab1HillClimbingSearch(estado);
-        Lab1SimulatedAnnealingSearch(estado);
+        Lab1HillClimbingSearch(estado);
+        //Lab1SimulatedAnnealingSearch(estado);
     }
         
         private static void Lab1HillClimbingSearch(Estado estado) {
@@ -37,6 +37,7 @@ public class Lab1Demo {
                 System.out.println();
                 printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
+                System.out.println(agent.getActions().get(agent.getActions().size()-1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
