@@ -49,7 +49,7 @@ public class Estado {
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
 
     /* FUNCIONES AUXILIARES */
-    private int obtenerConductor(int p){
+    public int obtenerConductor(int p){
         for (int i = 0; i < eventos.size(); i++) {
 			for (int j = 0; j < eventos.get(i).size(); j++){
                 if (eventos.get(i).get(j) == p) return i;
