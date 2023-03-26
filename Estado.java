@@ -53,10 +53,11 @@ public class Estado {
         usuarios = new ArrayList<>(u);
         eventos = new ArrayList<>(M);
         for(int i = 0; i<e.size(); ++i) {
-            eventos.add(new ArrayList<>());
+            eventos.add(new ArrayList<>(e.get(i)));
+            /*
             for(int j = 0; j<e.get(i).size(); j++) {
                 eventos.get(i).add(e.get(i).get(j));
-            }
+            }*/
         }
     }
     
@@ -390,7 +391,7 @@ public class Estado {
         return retVal;
     }
 
-    private boolean dentroZona (int CondX, int CondY, int Pasajero, int rad) {
+    private boolean dentroZona (int CondX, int CondY, int Pasajero, int rad, boolean conductor) {
         int minX = CondX - rad;
         int maxX = CondX + rad;
         int minY = CondY - rad;
@@ -399,8 +400,12 @@ public class Estado {
         int PorigY = usuarios.get(Pasajero).getCoordOrigenY();
         int PdestX = usuarios.get(Pasajero).getCoordDestinoX();
         int PdestY = usuarios.get(Pasajero).getCoordDestinoY();
-
-        if (PorigX > minX && PorigX < maxX && PorigY > minY && PorigY < maxY) {
+        if (conductor){
+            if (PorigX > minX && PorigX < maxX && PorigY > minY && PorigY < maxY){
+                if (PdestX > minX && PdestX < maxX && PdestY > minY && PdestY < maxY) return true;
+            }
+        } else {
+            if (PorigX > minX && PorigX < maxX && PorigY > minY && PorigY < maxY) return true;
             if (PdestX > minX && PdestX < maxX && PdestY > minY && PdestY < maxY) return true;
         }
         return false;
@@ -418,29 +423,126 @@ public class Estado {
         int a = 1;
         while (a*a <= M) a++;
         a--;
-        int radio = (int) Math.ceil(M/(a*2));
+        int radio = (int) Math.ceil(100/(a));
 
         // Añadimos nuevos conductores a menos que estén en la zona de uno ya añadido
         for(int i = 0; i < M; i++) {
-            boolean asignado = false;
-            for(int j = 0; j < i; j++){
-                if (centroConductores.get(j).size() > 0){
-                    if (dentroZona(centroConductores.get(j).get(0), centroConductores.get(j).get(0), i, radio)){
-                        anadirPasajero(i, j); // Conductor dentro de la zona de otro
-                        if (kilometrajeValido(eventos.get(j))) asignado = true; else eliminarPasajero(i, j); 
-                    }
-                }
-            }
-            if(!asignado){
+            if ( 1000 < distancia(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoX(), usuarios.get(i).getCoordDestinoY())){
                 anadirConductor(i);
                 List<Integer> driverList = new ArrayList<>();
                 driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
                 driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
                 centroConductores.add(driverList);
+            } else{
+                boolean asignado = false;
+                for(int j = 0; j < i && !asignado; j++){
+                    if (centroConductores.get(j).size() > 0){
+                        if (dentroZona(centroConductores.get(j).get(0), centroConductores.get(j).get(1), i, radio, true)){
+                            anadirPasajero(i, j); // Conductor dentro de la zona de otro
+                            if (kilometrajeValido(eventos.get(j))) {
+                                    asignado = true;
+                                    centroConductores.add(new ArrayList<>());
+                                    eventos.add(new ArrayList<>());
+                            } else eliminarPasajero(i, j); 
+                        }
+                    }
+                }
+                if(!asignado){
+                    anadirConductor(i);
+                    List<Integer> driverList = new ArrayList<>();
+                    driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
+                    driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
+                    centroConductores.add(driverList);
+                }
             }
         }
 
+        System.out.println("b");
+        System.out.println(conversionString());
+
         // Asignamos conductor a los pasajeros, intentando primero que estén dentro de la zona del conductor
+        int pasajero = M;
+        while(pasajero<N) {
+            boolean asignado = false;
+            int conductor = 0;
+            int primer_conductor_disponible = -1;
+            while(!asignado && conductor<M) {
+                if (centroConductores.get(conductor).size() > 0){
+                    anadirPasajero(pasajero, conductor);
+                    if (kilometrajeValido(eventos.get(conductor))) {
+                        if (primer_conductor_disponible == -1) {
+                            primer_conductor_disponible = conductor;
+                        }
+                        if (dentroZona(centroConductores.get(conductor).get(0), centroConductores.get(conductor).get(1), pasajero, radio, false)) {
+                            asignado = true;
+                        } else eliminarPasajero(pasajero, conductor);                    
+                    } else {
+                        eliminarPasajero(pasajero, conductor);
+                        //if (pasajero== 187) System.out.println("no cabe " + conductor);
+
+                    }
+                }
+                conductor++;
+            }
+            if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else if (!asignado){
+                System.out.println("no disponible");
+                break;
+            } 
+            pasajero++;
+        }
+        if(pasajero<N) System.out.println("No es solucion " + pasajero);
+        else System.out.println("Solucion inicial generada");
+        //System.out.println(conversionString());
+        //System.exit(0);
+    }
+    // ampliar radio
+    // que solo orig o dest esté en la zona
+
+    public boolean enZona(int c, int p){
+        int AOx = usuarios.get(c).getCoordOrigenX();
+        int AOy = usuarios.get(c).getCoordOrigenY();
+        int ADx = usuarios.get(c).getCoordDestinoX();
+        int ADy = usuarios.get(c).getCoordDestinoY();
+        int BOx = usuarios.get(p).getCoordOrigenX();
+        int BOy = usuarios.get(p).getCoordOrigenY();
+        int BDx = usuarios.get(p).getCoordDestinoX();
+        int BDy = usuarios.get(p).getCoordDestinoY();
+        if (AOx <= ADx && AOy <= ADy) return BOx > AOx && BOx <= ADx && BOy > AOy && BOy <= ADy && BDx > AOx && BDx <= ADx && BDy > AOy && BDy <= ADy;
+        if (AOx <= ADx && AOy > ADy) return BOx > AOx && BOx <= ADx && BOy <= AOy && BOy > ADy && BDx > AOx && BDx <= ADx && BDy <= AOy && BDy > ADy;
+        if (AOx > ADx && AOy <= ADy) return BOx <= AOx && BOx > ADx && BOy > AOy && BOy <= ADy && BDx <= AOx && BDx > ADx && BDy > AOy && BDy <= ADy;
+        if (AOx > ADx && AOy > ADy) return BOx <= AOx && BOx > ADx && BOy <= AOy && BOy > ADy && BDx <= AOx && BDx > ADx && BDy < AOy && BDy > ADy;
+        return false;
+        
+    }
+    public void solucionInicial5(){
+        
+        // Añadimos nuevos conductores a menos que estén en la zona de uno ya añadido
+        for(int i = 0; i < M; i++) {
+            if ( 100 < distancia(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoX(), usuarios.get(i).getCoordDestinoY())){
+                anadirConductor(i);
+            } else{
+                boolean asignado = false;
+                for(int j = 0; j < i && !asignado; j++){
+                    if (eventos.get(j).size() > 0){
+                        if (enZona(j, i)){
+                            anadirPasajero(i, j); // Conductor dentro de la zona de otro
+                            if (kilometrajeValido(eventos.get(j))) {
+                                    asignado = true;
+                                    eventos.add(new ArrayList<>());
+                            } else eliminarPasajero(i, j); 
+                        }
+                    }
+                }
+                if(!asignado){
+                    anadirConductor(i);
+                }
+            }
+        }
+         /*
+        for(int i=0; i<M; i++) {
+            anadirConductor(i);
+        }*/
+
         int pasajero = M;
         while(pasajero<N) {
             boolean asignado = false;
@@ -452,17 +554,23 @@ public class Estado {
                     if (primer_conductor_disponible == -1) {
                         primer_conductor_disponible = conductor;
                     }
-                    if (dentroZona(centroConductores.get(conductor).get(0), centroConductores.get(conductor).get(0), pasajero, radio)) {
+                    if (enZona(conductor, pasajero)) {
                         asignado = true;
                     } else eliminarPasajero(pasajero, conductor);                    
-                } else eliminarPasajero(pasajero, conductor);
+                } else {
+                    eliminarPasajero(pasajero, conductor);
+                    //if (pasajero== 187) System.out.println("no cabe " + conductor);
+                }
                 conductor++;
             }
-            if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else break;
+            if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else if (!asignado){
+                System.out.println("no disponible");
+                break;
+            } 
             pasajero++;
         }
-        if(pasajero<N) System.out.println("No es solucion");
+        if(pasajero<N) System.out.println("No es solucion " + pasajero);
         else System.out.println("Solucion inicial generada");
-
     }
 }
+
