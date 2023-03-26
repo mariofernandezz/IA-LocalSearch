@@ -20,10 +20,16 @@ public class Lab1Demo {
         System.out.println("Introduce una seed");
         int seed = scan.nextInt();
 
+        long startTime = System.currentTimeMillis();
+
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial5();
+        estado.solucionInicial4b();
         System.out.println(estado.conversionString());
         Lab1HillClimbingSearch(estado);
+        
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        System.out.println("Tiempo de ejecución: " + elapsedTime + " milisegundos");
         //Lab1SimulatedAnnealingSearch(estado);
     }
         

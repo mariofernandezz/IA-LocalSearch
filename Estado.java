@@ -171,6 +171,42 @@ public class Estado {
         else System.out.println("Solucion inicial generada");
 
     }
+
+    public void solucionInicial4b() {
+        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
+        // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
+        ArrayList<Integer> permutation = new ArrayList<>();
+        for (int p=M; p<N; p++){
+            permutation.add(p);
+        }
+        Collections.shuffle(permutation);
+
+        // Añadimos todos los conductores a los eventos
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+        }
+
+        // Asignamos conductor a los pasajeros
+        int c = 0;
+        int p = 0;
+        boolean esValido = true;
+        while(p<(N-M) && c<M){
+            while(p<(N-M) && esValido){
+                anadirPasajero(permutation.get(p), c);
+                p++;
+                esValido = kilometrajeValido(eventos.get(c));
+            }
+            if (! esValido){
+                p--;
+                eliminarPasajero(permutation.get(p), c);
+                esValido = true;
+            }
+            c++;
+        }
+        if(p<N) System.out.println("No es solucion");
+        else System.out.println("Solucion inicial generada");
+
+    }
     
     
 
