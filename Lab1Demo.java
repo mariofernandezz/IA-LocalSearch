@@ -1,14 +1,12 @@
-import java.util.Scanner;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
 import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
 
 public class Lab1Demo {
     public static void main(String[] args){
@@ -21,7 +19,7 @@ public class Lab1Demo {
         int seed = scan.nextInt();
 
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial3();
+        estado.solucionInicial2();
         System.out.println(estado.conversionString());
         Lab1HillClimbingSearch(estado);
         //Lab1SimulatedAnnealingSearch(estado);
@@ -60,9 +58,8 @@ public class Lab1Demo {
         }
         
         private static void printInstrumentation(Properties properties) {
-            Iterator keys = properties.keySet().iterator();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
+            for (Object o : properties.keySet()) {
+                String key = (String) o;
                 String property = properties.getProperty(key);
                 System.out.println(key + " : " + property);
             }
