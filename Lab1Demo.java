@@ -23,7 +23,7 @@ public class Lab1Demo {
         long startTime = System.currentTimeMillis();
 
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial4b();
+        estado.solucionInicial5();
         System.out.println(estado.conversionString());
         Lab1HillClimbingSearch(estado);
         
