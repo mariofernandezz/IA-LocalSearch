@@ -1,11 +1,11 @@
 // GENERADOR DE SOLUCIÓN ALEATORIA PARA SIMULATED ANNEALING (con cambio de operador si tras 'iteraciones_max' iteraciones no se puede generar sucesor)
 
+import aima.search.framework.Successor;
+import aima.search.framework.SuccessorFunction;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import aima.search.framework.Successor;
-import aima.search.framework.SuccessorFunction;
 
 // Hay muchos + posibles sucesores de swap y cambiar pasajero de conductor -> individualmente, es + probable que se escoja uno de remove o add condutor
 // Escoger operador + 50 intentos de crear sucesor + escoger nuevo operador->
@@ -23,7 +23,7 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
 
-        int iteraciones_max = (int) estado.M/2; // # de iteraciones max que hace un operador para encontrar un sucesor hasta que se genera otro operador
+        int iteraciones_max = (int) estado.getM() /2; // # de iteraciones max que hace un operador para encontrar un sucesor hasta que se genera otro operador
 
         // Escogemos de forma aleatoria el operador a usar para crear el sucesor
         Random random = new Random();
@@ -39,7 +39,7 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor = generateRandom(random, 0, estado.M - 1);
+                    Conductor = generateRandom(random, 0, estado.getM() - 1);
                     if (estado.getEventos().get(Conductor).size() > 3){ // Comprobar que lleva más de un pasajero
                         // Escoger dos posiciones aleatorias
                         evento1 = generateRandom(random, 1, estado.getEventos().get(Conductor).size() - 1);
@@ -65,13 +65,13 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor1 = generateRandom(random, 0, estado.M - 1);
+                    Conductor1 = generateRandom(random, 0, estado.getM() - 1);
                     if (estado.getEventos().get(Conductor1).size() > 1){ // Comprobar que lleva almenos un pasajero
                         // Escoger un pasajero aleatorio
                         evento = generateRandom(random, 1, estado.getEventos().get(Conductor1).size() - 1);
                         int Pasajero = estado.getEventos().get(Conductor1).get(evento);
                         // Escoger otro conductor aleatorio
-                        Conductor2 = generateRandom(random, 0, estado.M - 1);
+                        Conductor2 = generateRandom(random, 0, estado.getM() - 1);
                         if (Conductor1 != Conductor2) { // Conductores diferentes
                             estadoNuevo.cambiarConductor(Pasajero, Conductor1, Conductor2);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
@@ -92,10 +92,10 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor1 = generateRandom(random, 0, estado.M - 1);
+                    Conductor1 = generateRandom(random, 0, estado.getM() - 1);
                     if (estado.getEventos().get(Conductor1).size() == 1){ // Comprobar que no tiene pasajeros, solo él mismo
                         // Escoger otro conductor aleatorio al que ponerle de pasajero
-                        Conductor2 = generateRandom(random, 0, estado.M - 1);
+                        Conductor2 = generateRandom(random, 0, estado.getM() - 1);
                         if (Conductor1 != Conductor2) { // Conductores diferentes
                             estadoNuevo.eliminarConductor(Conductor1, Conductor2);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
@@ -115,7 +115,7 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    NuevoConductor = generateRandom(random, 0, estado.M - 1);
+                    NuevoConductor = generateRandom(random, 0, estado.getM() - 1);
                     if (estado.getEventos().get(NuevoConductor).size() == 0){ // Comprobar que no conduce
                         int ConductorDelNuevoConductor = estado.obtenerConductor(NuevoConductor);
                         estadoNuevo.eliminarPasajero(NuevoConductor, ConductorDelNuevoConductor);
