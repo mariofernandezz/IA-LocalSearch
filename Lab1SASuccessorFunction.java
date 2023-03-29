@@ -44,7 +44,6 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + Conductor + " posiciones " + evento1 + " <--> " + evento2+ " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
-                            System.out.println(S);
                             retVal.add(new Successor(S, estadoNuevo));
                         }
                     }
@@ -68,7 +67,6 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.CAMBIAR_PASAJERO + " " + Pasajero + " --> de conductor " + Conductor1 + " a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
-                            System.out.println(S);
                             retVal.add(new Successor(S, estadoNuevo));
                         }
                     }
@@ -89,7 +87,6 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + Conductor1 + " --> a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
-                            System.out.println(S);
                             retVal.add(new Successor(S, estadoNuevo));
                         }
                     }
@@ -108,7 +105,6 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                     int ncond = estadoNuevo.numeroConductores();
                     int dist = estadoNuevo.kilometrajeSolucion();
                     String S = estadoNuevo.ANADIR_CONDUCTOR + " " + NuevoConductor + ", eliminandolo de conductor " + ConductorDelNuevoConductor + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
-                    System.out.println(S);
                     retVal.add(new Successor(S, estadoNuevo));
                 }
             }

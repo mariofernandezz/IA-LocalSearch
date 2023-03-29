@@ -40,6 +40,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                 int p = estado.getEventos().get(i).get(j);
                 if (!set.contains(p)){ //únicamente si es el primer indice
                     set.add(p);
+                    /*
                     if (p<estado.M){
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.eliminarPasajero(p, i);
@@ -50,6 +51,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                         String S = estadoNuevo.ANADIR_CONDUCTOR + " " + p + ", eliminandolo de conductor " + i + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                         retVal.add(new Successor(S, estadoNuevo));
                     } 
+                    */
+                    
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
                             Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
