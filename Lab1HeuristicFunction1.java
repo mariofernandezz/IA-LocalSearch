@@ -16,10 +16,13 @@ public class Lab1HeuristicFunction1 implements HeuristicFunction  {
     Estado estado = (Estado)s;
     ArrayList<ArrayList<Integer>> eventos = estado.getEventos();
     int sum = 0;
-    for (int i=0; i<estado.M; i++){
-      sum += estado.kilometrajeConductor(eventos.get(i));
+    int ncond = 0;
+    for (int i=0; i<estado.getM(); i++){
+      int dist = estado.kilometrajeConductor(eventos.get(i));
+      sum += dist;
+      if (estado.getEventos().get(i).size() > 0) ncond += 1;
     }
-    return (sum);
+    return sum;
   }  
 }
 
