@@ -20,19 +20,34 @@ public class Lab1Demo {
         System.out.println("Introduce una seed");
         int seed = scan.nextInt();
 
-        long startTime = System.currentTimeMillis();
+        
 
+        System.out.println("\nSolución inicial  -->");
         Estado estado = new Estado(N, M, seed);
         estado.solucionInicial5();
-        System.out.println(estado.conversionString());
-        Lab1HillClimbingSearch(estado);
+        mostrarMetricas(estado);
         
+        long startTime = System.currentTimeMillis();
+        Lab1HillClimbingSearch(estado);
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
         System.out.println("Tiempo de ejecución: " + elapsedTime + " milisegundos");
-        //Lab1SimulatedAnnealingSearch(estado);
+
+        startTime = System.currentTimeMillis();
+        Lab1SimulatedAnnealingSearch(estado);
+        endTime = System.currentTimeMillis();
+        elapsedTime = endTime - startTime;
+        System.out.println("Tiempo de ejecución: " + elapsedTime + " milisegundos");
     }
         
+        private static void mostrarMetricas(Estado estado){
+            int ncond = estado.numeroConductores();
+            int dist = estado.kilometrajeSolucion();
+            System.out.println("Eventos: " + estado.getEventos());
+            System.out.println("Distancia recorrida: " + dist);
+            System.out.println("Conductores usados: " + ncond);
+        }
+
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
@@ -40,10 +55,12 @@ public class Lab1Demo {
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
-                System.out.println();
-                printActions(agent.getActions());
+                //printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
-                System.out.println(agent.getActions().get(agent.getActions().size()-1));
+                
+                Estado estadoSolucion = (Estado) search.getGoalState();
+                mostrarMetricas(estadoSolucion);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -52,14 +69,15 @@ public class Lab1Demo {
         private static void Lab1SimulatedAnnealingSearch(Estado estado) {
             System.out.println("\nLab1 Simulated Annealing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
-                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(2000,100,5,0.001);
+                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(100000,100,5,0.001);
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);
-                
-                System.out.println();
-                printActions(agent.getActions());
+                //printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
+                
+                Estado estadoSolucion = (Estado) search.getGoalState();
+                mostrarMetricas(estadoSolucion);
             } catch (Exception e) {
                 e.printStackTrace();
             }

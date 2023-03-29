@@ -530,7 +530,6 @@ public class Estado {
                 }
             }
         }
-        System.out.println(pasajerosAsignados.size());
 
         //Asignamos pasajeros que no han sido asignados por la zona
         if(pasajerosAsignados.size()!= N-M){
