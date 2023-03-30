@@ -39,12 +39,14 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                     if (estado.getEventos().get(Conductor).get(evento1) != estado.getEventos().get(Conductor).get(evento2)) { // Eventos diferentes
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistInicial());
                         estadoNuevo.cambiarOrden(Conductor, evento1, evento2);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(Conductor))){
+                        estadoNuevo.actualizar_distancias(Conductor, null);
+                        if (estadoNuevo.kilometrajeValido(Conductor) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(Conductor))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + Conductor + " posiciones " + evento1 + " <--> " + evento2+ " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
+                            return retVal;
                         }
                     }
                 }
@@ -62,12 +64,14 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                     if (Conductor1 != Conductor2) { // Conductores diferentes
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistInicial());
                         estadoNuevo.cambiarConductor(Pasajero, Conductor1, Conductor2);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
+                        estadoNuevo.actualizar_distancias(Conductor1, Conductor2);
+                        if (estadoNuevo.kilometrajeValido(Conductor2)){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.CAMBIAR_PASAJERO + " " + Pasajero + " --> de conductor " + Conductor1 + " a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
+                            return retVal;
                         }
                     }
                 }
@@ -79,15 +83,18 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                 if (estado.getEventos().get(Conductor1).size() == 1){ // Comprobar que no tiene pasajeros, solo él mismo
                     // Escoger otro conductor aleatorio al que ponerle de pasajero
                     int Conductor2 = generateRandom(random, 0, estado.M - 1);
-                    if (Conductor1 != Conductor2) { // Conductores diferentes
+                    if (Conductor1 != Conductor2 && estado.getEventos().get(Conductor2).size() > 0) { // Conductores diferentes
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistInicial());
+                        estadoNuevo.distInicial = estado.get_distInicial();
                         estadoNuevo.eliminarConductor(Conductor1, Conductor2);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
+                        estadoNuevo.actualizar_distancias(Conductor1, Conductor2);
+                        if (estadoNuevo.kilometrajeValido(Conductor2)){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
                             String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + Conductor1 + " --> a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                             retVal.add(new Successor(S, estadoNuevo));
+                            return retVal;
                         }
                     }
                 }
@@ -101,14 +108,15 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
                     Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistInicial());
                     estadoNuevo.eliminarPasajero(NuevoConductor, ConductorDelNuevoConductor);
                     estadoNuevo.anadirConductor(NuevoConductor);
+                    estadoNuevo.actualizar_distancias(ConductorDelNuevoConductor, NuevoConductor);
                     double h = Lab1HF.getHeuristicValue(estadoNuevo);
                     int ncond = estadoNuevo.numeroConductores();
                     int dist = estadoNuevo.kilometrajeSolucion();
                     String S = estadoNuevo.ANADIR_CONDUCTOR + " " + NuevoConductor + ", eliminandolo de conductor " + ConductorDelNuevoConductor + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                     retVal.add(new Successor(S, estadoNuevo));
+                    return retVal;
                 }
             }
-            return retVal;
         }
     }
 }

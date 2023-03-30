@@ -49,12 +49,17 @@ public class Lab1Demo {
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
                 //printActions(agent.getActions());
+                //printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
+                
+                Estado estadoSolucion = (Estado) search.getGoalState();
+                mostrarMetricas(estadoSolucion);
+
                 
                 Estado estadoSolucion = (Estado) search.getGoalState();
                 mostrarMetricas(estadoSolucion);
@@ -89,7 +94,7 @@ public class Lab1Demo {
                 e.printStackTrace();
             }
         }
-        
+
         private static void printInstrumentation(Properties properties) {
             Iterator keys = properties.keySet().iterator();
             while (keys.hasNext()) {
@@ -102,8 +107,6 @@ public class Lab1Demo {
         
         private static void printActions(List actions) {
             for (int i = 0; i < actions.size(); i++) {
-                Class tipo = actions.get(i).getClass();
-                System.out.println(tipo.getName());
                 String action = (String) actions.get(i);
                 System.out.println(action);
             }
