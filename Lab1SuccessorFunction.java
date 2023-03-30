@@ -11,7 +11,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
     public List getSuccessors(Object s){
         List retVal = new ArrayList();
         Estado estado  = (Estado) s;
-        Lab1HeuristicFunction2 Lab1HF  = new Lab1HeuristicFunction2();
+        Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
 
         // 1. Swap eventos dentro de un mismo conductor
         for (int i=0; i<estado.M; i++){

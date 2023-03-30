@@ -48,6 +48,7 @@ public class Estado {
             eventos.add(aux);
     }
     }
+    }
     */
 
      
@@ -58,10 +59,11 @@ public class Estado {
         usuarios = new ArrayList<>(u);
         eventos = new ArrayList<>(M);
         for(int i = 0; i<e.size(); ++i) {
-            eventos.add(new ArrayList<>());
+            eventos.add(new ArrayList<>(e.get(i)));
+            /*
             for(int j = 0; j<e.get(i).size(); j++) {
                 eventos.get(i).add(e.get(i).get(j));
-            }
+            }*/
         }
     }
     
@@ -365,6 +367,7 @@ public class Estado {
             Ay = By;
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
+        return dist; // Manzanas
         return dist; // Manzanas
     }
 

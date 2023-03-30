@@ -20,9 +20,6 @@ public class Lab1Demo {
         System.out.println("Introduce una seed");
         int seed = scan.nextInt();
 
-        
-
-        System.out.println("\nSolución inicial  -->");
         Estado estado = new Estado(N, M, seed);
         estado.solucionInicial5b(seed);
         mostrarMetricas(estado);
@@ -52,7 +49,7 @@ public class Lab1Demo {
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
@@ -76,14 +73,20 @@ public class Lab1Demo {
                 double lambda = 0.001;
                 Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda);
+                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(2000,100,5,0.001);
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);
                 //printActions(agent.getActions());
+
+                System.out.println();
+                printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
                 
                 Estado estadoSolucion = (Estado) search.getGoalState();
                 mostrarMetricas(estadoSolucion);
                 System.out.println("It: " + it + ". It por cambio de temperatura: " + itpc + ". k: " + k + ". lambda: " + lambda);
+                System.out.println(agent.getActions().get(agent.getActions().size()-1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,6 +104,8 @@ public class Lab1Demo {
         
         private static void printActions(List actions) {
             for (int i = 0; i < actions.size(); i++) {
+                Class tipo = actions.get(i).getClass();
+                System.out.println(tipo.getName());
                 String action = (String) actions.get(i);
                 System.out.println(action);
             }
