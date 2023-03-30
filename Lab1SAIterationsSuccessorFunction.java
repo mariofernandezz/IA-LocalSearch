@@ -28,7 +28,7 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
         Random random = new Random();
         int Operador = 0;
         while (true) {
-            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.distInicial);
             Operador = generateRandom(random, 1, 4);
             if (Operador == 1) {
                 // 1. Swap eventos dentro de un mismo conductor

@@ -19,6 +19,7 @@ public class Estado {
     private ArrayList<ArrayList<Integer>> eventos;
     int M;
     int N;
+    int distInicial;
 
     public static String INTERCAMBIAR_ORDEN = "cambio de orden";
     public static String CAMBIAR_PASAJERO = "cambio pasajero";
@@ -33,6 +34,7 @@ public class Estado {
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
         ordenar(u);
+        distInicial = 300*M;
     }
     /* 
     public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
@@ -49,9 +51,10 @@ public class Estado {
     */
 
      
-    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
+    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e, int d){
         N = u.size();
         M = e.size();
+        distInicial = d;
         usuarios = new ArrayList<>(u);
         eventos = new ArrayList<>(M);
         for(int i = 0; i<e.size(); ++i) {
@@ -76,6 +79,7 @@ public class Estado {
     public ArrayList<Usuario> getUsuarios(){ return usuarios;}
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
     public int getM(){ return M;}
+    public int getDistInicial(){ return distInicial;}
 
     /* FUNCIONES AUXILIARES */
     public int obtenerConductor(int p){
@@ -548,9 +552,9 @@ public class Estado {
     }
 
 
-        public void solucionInicial5b(){
+        public void solucionInicial5b(int seed){
             HashSet<Integer> pasajerosAsignados = new HashSet<>();
-            Random rndm = new Random();
+            Random rndm = new Random(seed);
     
             //Añadimos todos los conductores a los eventos
             for(int i=0; i<M; i++) {

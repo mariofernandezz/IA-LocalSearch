@@ -24,8 +24,9 @@ public class Lab1Demo {
 
         System.out.println("\nSolución inicial  -->");
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial5b();
+        estado.solucionInicial5b(seed);
         mostrarMetricas(estado);
+        estado.distInicial = estado.kilometrajeSolucion();
         
         long startTime = System.currentTimeMillis();
         Lab1HillClimbingSearch(estado);
@@ -51,7 +52,7 @@ public class Lab1Demo {
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
