@@ -368,7 +368,6 @@ public class Estado {
         }
         dist += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
         return dist; // Manzanas
-        return dist; // Manzanas
     }
 
     // Verificar Kilometraje (max 30km = 300 manzanas)

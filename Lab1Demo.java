@@ -71,16 +71,14 @@ public class Lab1Demo {
                 int itpc = 100;
                 int k = 10;
                 double lambda = 0.001;
+
                 Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda);
-                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
-                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(2000,100,5,0.001);
+                
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);
                 //printActions(agent.getActions());
 
-                System.out.println();
-                printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
                 
                 Estado estadoSolucion = (Estado) search.getGoalState();
