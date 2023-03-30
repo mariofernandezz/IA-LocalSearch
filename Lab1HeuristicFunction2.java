@@ -17,12 +17,9 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
         return retValue;
     }
   
-    
+    // Heurística 2: Se considera la suma de la distancia recorrida por todos los conductores y el número de conductores de la solución
     public double getHeuristicValue(Object s) {
         Estado estado = (Estado)s;
-        ArrayList<ArrayList<Integer>> eventos = estado.getEventos();
-        //double ncond = estado.numeroConductores();
-        //return 0.75*estado.kilometrajeEstado()/estado.getDistInicial() + 0.25*ncond/estado.getM();
         return 0.75*estado.kilometrajeEstado()/estado.getDistInicial() + 0.25*estado.numeroConductores()/estado.getM();
     }
   
