@@ -3,6 +3,7 @@
 import IA.Comparticion.Usuario;
 import IA.Comparticion.Usuarios;
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -544,6 +545,44 @@ public class Estado {
                 c=0;
             }
         }
+    }
+
+
+        public void solucionInicial5b(){
+            HashSet<Integer> pasajerosAsignados = new HashSet<>();
+            Random rndm = new Random();
+    
+            //Añadimos todos los conductores a los eventos
+            for(int i=0; i<M; i++) {
+                anadirConductor(i);
+            }
+    
+            //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
+            for(int c=0; c<M; c++){
+                HashSet<Integer> pasajerosProbados = new HashSet<>();
+                while(pasajerosProbados.size() + pasajerosAsignados.size()<N-M){
+                    int p = rndm.nextInt(M, N);
+                    if (!pasajerosAsignados.contains(p) && !pasajerosProbados.contains(p)){
+                        pasajerosProbados.add(p);
+                        if(enZona(c, p)){
+                            anadirPasajero(p, c);
+                            if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                            else eliminarPasajero(p, c);
+                        }
+                    }
+                }
+            }
+    
+            //Asignamos pasajeros que no han sido asignados por la zona
+            while(pasajerosAsignados.size()!= N-M){
+                int p = rndm.nextInt(M, N);
+                while(!pasajerosAsignados.contains(p)){
+                    int c = rndm.nextInt(0, M);
+                    anadirPasajero(p, c);
+                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                    else eliminarPasajero(p, c);
+                }
+            }
     }
 
     
