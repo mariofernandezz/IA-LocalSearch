@@ -20,7 +20,7 @@ public class Lab1SASuccessorFunction implements SuccessorFunction {
     public List getSuccessors(Object s){
         List retVal = new ArrayList();
         Estado estado  = (Estado) s;
-        Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
+        Lab1HeuristicFunction2 Lab1HF  = new Lab1HeuristicFunction2();
 
         // Escogemos de forma aleatoria el operador a usar para crear el sucesor
         Random random = new Random();

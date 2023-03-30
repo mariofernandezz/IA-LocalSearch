@@ -17,7 +17,7 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
         return retValue;
     }
   
-    /*
+    
     public double getHeuristicValue(Object s) {
         Estado estado = (Estado)s;
         ArrayList<ArrayList<Integer>> eventos = estado.getEventos();
@@ -29,13 +29,13 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
                 sum += estado.kilometrajeConductor(eventos.get(i));
             }
         }
-        //System.out.println(sum/(300*ncond) + (ncond/estado.getM()));
-        return sum*ncond;
+        //System.out.println(sum/(300*estado.getM()) + (ncond/estado.getM()));
+        return 100*sum/(300*estado.getM()) + (ncond/estado.getM());
     }
-    */
     
     
     
+    /* 
     // Heurística 2: Se considera la suma de la distancia recorrida por todos los conductores y el número de conductores de la solución
     // REDEFINIR QUÉ IMPORTANCIA LE DAMOS A CADA COSA (CONDUCTORES Y KM)!!
     public double getHeuristicValue(Object s) {
@@ -48,7 +48,7 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
             }
         }
         return sum;
-    }
+    */
     
     
   

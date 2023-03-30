@@ -20,7 +20,7 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
     public List getSuccessors(Object s){
         List retVal = new ArrayList();
         Estado estado  = (Estado) s;
-        Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
+        Lab1HeuristicFunction2 Lab1HF  = new Lab1HeuristicFunction2();
 
         int iteraciones_max = (int) estado.M/2; // # de iteraciones max que hace un operador para encontrar un sucesor hasta que se genera otro operador
 

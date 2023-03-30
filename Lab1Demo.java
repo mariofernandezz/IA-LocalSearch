@@ -28,7 +28,7 @@ public class Lab1Demo {
         mostrarMetricas(estado);
         
         long startTime = System.currentTimeMillis();
-        Lab1HillClimbingSearch(estado);
+        //Lab1HillClimbingSearch(estado);
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
         System.out.println("Tiempo de ejecución: " + elapsedTime + " milisegundos");
@@ -51,7 +51,7 @@ public class Lab1Demo {
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
@@ -69,8 +69,12 @@ public class Lab1Demo {
         private static void Lab1SimulatedAnnealingSearch(Estado estado) {
             System.out.println("\nLab1 Simulated Annealing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
-                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(100000,100,5,0.001);
+                int it = 10000000;
+                int itpc = 100;
+                int k = 10;
+                double lambda = 0.001;
+                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda);
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);
                 //printActions(agent.getActions());
@@ -78,6 +82,7 @@ public class Lab1Demo {
                 
                 Estado estadoSolucion = (Estado) search.getGoalState();
                 mostrarMetricas(estadoSolucion);
+                System.out.println("It: " + it + ". It por cambio de temperatura: " + itpc + ". k: " + k + ". lambda: " + lambda);
             } catch (Exception e) {
                 e.printStackTrace();
             }
