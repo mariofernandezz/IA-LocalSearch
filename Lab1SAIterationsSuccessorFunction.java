@@ -22,13 +22,12 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
         Estado estado  = (Estado) s;
         Lab1HeuristicFunction1 Lab1HF  = new Lab1HeuristicFunction1();
 
-        int iteraciones_max = (int) estado.M/2; // # de iteraciones max que hace un operador para encontrar un sucesor hasta que se genera otro operador
+        int iteraciones_max = (int) estado.getM()/2; // # de iteraciones max que hace un operador para encontrar un sucesor hasta que se genera otro operador
 
         // Escogemos de forma aleatoria el operador a usar para crear el sucesor
         Random random = new Random();
         int Operador = 0;
         while (true) {
-            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
             Operador = generateRandom(random, 1, 4);
             if (Operador == 1) {
                 // 1. Swap eventos dentro de un mismo conductor
@@ -39,16 +38,20 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor = generateRandom(random, 0, estadoNuevo.M - 1);
-                    if (estadoNuevo.getEventos().get(Conductor).size() > 3){ // Comprobar que lleva más de un pasajero
+                    Conductor = generateRandom(random, 0, estado.M - 1);
+                    if (estado.getEventos().get(Conductor).size() > 3){ // Comprobar que lleva más de un pasajero
                         // Escoger dos posiciones aleatorias
-                        evento1 = generateRandom(random, 1, estadoNuevo.getEventos().get(Conductor).size() - 1);
-                        evento2 = generateRandom(random, 1, estadoNuevo.getEventos().get(Conductor).size() - 1);
-                        if (estadoNuevo.getEventos().get(Conductor).get(evento1) != estadoNuevo.getEventos().get(Conductor).get(evento2)) { // Eventos diferentes
+                        evento1 = generateRandom(random, 1, estado.getEventos().get(Conductor).size() - 1);
+                        evento2 = generateRandom(random, 1, estado.getEventos().get(Conductor).size() - 1);
+                        if (estado.getEventos().get(Conductor).get(evento1) != estado.getEventos().get(Conductor).get(evento2)) { // Eventos diferentes
+                            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                            estadoNuevo.distInicial = estado.get_distInicial();
                             estadoNuevo.cambiarOrden(Conductor, evento1, evento2);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(Conductor))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                                String S = "heuristic:" + h;
+                                int ncond = estadoNuevo.numeroConductores();
+                                int dist = estadoNuevo.kilometrajeSolucion();
+                                String S = estadoNuevo.INTERCAMBIAR_ORDEN + " del conductor " + Conductor + " posiciones " + evento1 + " <--> " + evento2+ " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                                 retVal.add(new Successor(S, estadoNuevo));
                                 return retVal;
                             }
@@ -65,18 +68,22 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor1 = generateRandom(random, 0, estadoNuevo.M - 1);
-                    if (estadoNuevo.getEventos().get(Conductor1).size() > 1){ // Comprobar que lleva almenos un pasajero
+                    Conductor1 = generateRandom(random, 0, estado.M - 1);
+                    if (estado.getEventos().get(Conductor1).size() > 1){ // Comprobar que lleva almenos un pasajero
                         // Escoger un pasajero aleatorio
-                        evento = generateRandom(random, 1, estadoNuevo.getEventos().get(Conductor1).size() - 1);
-                        int Pasajero = estadoNuevo.getEventos().get(Conductor1).get(evento);
+                        evento = generateRandom(random, 1, estado.getEventos().get(Conductor1).size() - 1);
+                        int Pasajero = estado.getEventos().get(Conductor1).get(evento);
                         // Escoger otro conductor aleatorio
                         Conductor2 = generateRandom(random, 0, estado.M - 1);
-                        if (Conductor1 != Conductor2) { // Conductores diferentes
+                        if (Conductor1 != Conductor2 && estado.getEventos().get(Conductor2).size() > 0) { // Conductores diferentes
+                            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                            estadoNuevo.distInicial = estado.get_distInicial();
                             estadoNuevo.cambiarConductor(Pasajero, Conductor1, Conductor2);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                                String S = "heuristic:" + h;
+                                int ncond = estadoNuevo.numeroConductores();
+                                int dist = estadoNuevo.kilometrajeSolucion();
+                                String S = estadoNuevo.CAMBIAR_PASAJERO + " " + Pasajero + " --> de conductor " + Conductor1 + " a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                                 retVal.add(new Successor(S, estadoNuevo));
                                 return retVal;
                             }
@@ -92,15 +99,19 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    Conductor1 = generateRandom(random, 0, estadoNuevo.M - 1);
-                    if (estadoNuevo.getEventos().get(Conductor1).size() == 1){ // Comprobar que no tiene pasajeros, solo él mismo
+                    Conductor1 = generateRandom(random, 0, estado.M - 1);
+                    if (estado.getEventos().get(Conductor1).size() == 1){ // Comprobar que no tiene pasajeros, solo él mismo
                         // Escoger otro conductor aleatorio al que ponerle de pasajero
-                        Conductor2 = generateRandom(random, 0, estadoNuevo.M - 1);
-                        if (Conductor1 != Conductor2) { // Conductores diferentes
+                        Conductor2 = generateRandom(random, 0, estado.M - 1);
+                        if (Conductor1 != Conductor2 && estado.getEventos().get(Conductor2).size() > 0) { // Conductores diferentes
+                            Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                            estadoNuevo.distInicial = estado.get_distInicial();
                             estadoNuevo.eliminarConductor(Conductor1, Conductor2);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(Conductor2))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                                String S = "heuristic:" + h;
+                                int ncond = estadoNuevo.numeroConductores();
+                                int dist = estadoNuevo.kilometrajeSolucion();
+                                String S = estadoNuevo.ELIMINAR_CONDUCTOR + " " + Conductor1 + " --> a conductor " + Conductor2 + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                                 retVal.add(new Successor(S, estadoNuevo));
                                 return retVal;
                             }
@@ -115,13 +126,17 @@ public class Lab1SAIterationsSuccessorFunction implements SuccessorFunction {
                 int i = 0;
                 while (i < iteraciones_max) {
                     // Escoger un conductor aleatorio
-                    NuevoConductor = generateRandom(random, 0, estadoNuevo.M - 1);
-                    if (estadoNuevo.getEventos().get(NuevoConductor).size() == 0){ // Comprobar que no conduce
-                        int ConductorDelNuevoConductor = estadoNuevo.obtenerConductor(NuevoConductor);
+                    NuevoConductor = generateRandom(random, 0, estado.M - 1);
+                    if (estado.getEventos().get(NuevoConductor).size() == 0){ // Comprobar que no conduce
+                        int ConductorDelNuevoConductor = estado.obtenerConductor(NuevoConductor);
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                        estadoNuevo.distInicial = estado.get_distInicial();
                         estadoNuevo.eliminarPasajero(NuevoConductor, ConductorDelNuevoConductor);
                         estadoNuevo.anadirConductor(NuevoConductor);
                         double h = Lab1HF.getHeuristicValue(estadoNuevo);
-                        String S = "heuristic:" + h;
+                        int ncond = estadoNuevo.numeroConductores();
+                        int dist = estadoNuevo.kilometrajeSolucion();
+                        String S = estadoNuevo.ANADIR_CONDUCTOR + " " + NuevoConductor + ", eliminandolo de conductor " + ConductorDelNuevoConductor + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
                         retVal.add(new Successor(S, estadoNuevo));
                         return retVal;
                     }

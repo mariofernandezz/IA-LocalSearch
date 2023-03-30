@@ -19,6 +19,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                 for (int k=1; k<j; k++){
                     if (estado.getEventos().get(i).get(j) != estado.getEventos().get(i).get(k)) {
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                        estadoNuevo.distInicial = estado.get_distInicial();
                         estadoNuevo.cambiarOrden(i, j, k);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
@@ -56,7 +57,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
                             Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
-                            estadoNuevo.cambiarConductor(p, null, k);
+                            estadoNuevo.distInicial = estado.get_distInicial();
+                            estadoNuevo.cambiarConductor(p, i, k);
                             if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k))){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
                                 int ncond = estadoNuevo.numeroConductores();
@@ -76,7 +78,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
             if (estado.getEventos().get(i).size() == 1) { //solo se conduce a él mismo
                 for (int j=0; j<estado.M; j++){ //conductores donde puedo ponerlo
                     if (estado.getEventos().get(j).size()>0 && i!=j) { 
-                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());                    
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                        estadoNuevo.distInicial = estado.get_distInicial();                    
                         estadoNuevo.eliminarConductor(i, j);
                         if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);

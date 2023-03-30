@@ -19,6 +19,9 @@ public class Estado {
     int M;
     int N;
 
+    int distInicial;
+    public int get_distInicial(){ return distInicial;}
+
     public static String INTERCAMBIAR_ORDEN = "cambio de orden";
     public static String CAMBIAR_PASAJERO = "cambio pasajero";
     public static String ANADIR_CONDUCTOR = "añadir conductor";
@@ -75,6 +78,7 @@ public class Estado {
     public ArrayList<Usuario> getUsuarios(){ return usuarios;}
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
     public int getM(){ return M;}
+    public int getN(){ return N;}
 
     /* FUNCIONES AUXILIARES */
     public int obtenerConductor(int p){
@@ -415,9 +419,10 @@ public class Estado {
             Ay = By;
         }
         distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return distTotal + distLibre; // Manzanas
+        int distSinUsar = 300 - distTotal;
+        return distLibre + distSinUsar; // Manzanas
     }
-
+    /*
     private int mitadCamino (int a, int b){
         double orig = (double) a;
         double dest = (double) b;
@@ -494,7 +499,7 @@ public class Estado {
         if(pasajero<N) System.out.println("No es solucion");
         else System.out.println("Solucion inicial generada");
     }
-
+    */
 
     public boolean enZona(int c, int p){
         int AOx = usuarios.get(c).getCoordOrigenX();
@@ -544,6 +549,7 @@ public class Estado {
                 c=0;
             }
         }
+        distInicial = kilometrajeSolucion();
     }
 
     
