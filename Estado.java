@@ -22,6 +22,9 @@ public class Estado {
     int distInicial;
     public int get_distInicial(){ return distInicial;}
 
+    ArrayList<Integer> distancias;
+    public ArrayList<Integer> get_distancias(){return distancias;}
+
     public static String INTERCAMBIAR_ORDEN = "cambio de orden";
     public static String CAMBIAR_PASAJERO = "cambio pasajero";
     public static String ANADIR_CONDUCTOR = "añadir conductor";
@@ -137,7 +140,7 @@ public class Estado {
         return (eventos.get(c).size()-1)/2;
     }
 
-    
+    /*
     public void solucionInicial4() {
         //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
@@ -175,7 +178,9 @@ public class Estado {
         else System.out.println("Solucion inicial generada");
 
     }
+    */
 
+    /*
     public void solucionInicial4b() {
         //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
@@ -211,7 +216,7 @@ public class Estado {
         else System.out.println("Solucion inicial generada");
 
     }
-    
+    */
     
 
     /*
@@ -232,9 +237,9 @@ public class Estado {
             eventos.add(aux);
         }
         System.out.println(eventos);
-    }
-    */
-
+        }
+        */
+        /*
         public void solucionInicial1() {
             //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
             // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
@@ -247,7 +252,7 @@ public class Estado {
             int p = M;
             repartirPasajeros(c, p);
         }
-
+        
         private void repartirPasajeros(int c, int p) {
             // Asignamos conductor a los pasajeros
 
@@ -270,7 +275,8 @@ public class Estado {
             else System.out.println("Solucion inicial generada");
             System.out.println(eventos);
         }
-
+        */
+        /*
         public void solucionInicial2() {
             //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje.
             //El conductor escoge pasajeros que esten cerca de su posición.
@@ -309,7 +315,9 @@ public class Estado {
             else System.out.println("Solucion inicial generada");
             //System.out.println(eventos);
         }
+        */
 
+        /*
         private boolean pasajeroCercano(int actual, int nuevo) {
             int Ax = usuarios.get(actual).getCoordDestinoX();
             int Ay = usuarios.get(actual).getCoordDestinoY();
@@ -317,6 +325,7 @@ public class Estado {
             int By = usuarios.get(nuevo).getCoordOrigenY();
             return 50 > distancia(Ax, Ay, Bx, By);
         }
+        */
 
     /* CONDICIONES DE APLICABILIDAD */
 
@@ -336,7 +345,7 @@ public class Estado {
     public int kilometrajeSolucion(){
         int sum = 0;
         for (int i=0; i<M; i++){
-            sum += kilometrajeConductor(eventos.get(i));
+            sum += distancias.get(i);
         }
         return sum;
     }
@@ -367,9 +376,16 @@ public class Estado {
         return dist; // Manzanas
     }
 
+    public void actualizar_distancias(int c1, Integer c2){
+        distancias.set(c1, kilometrajeConductor(eventos.get(c1)));
+        if (c2 != null){
+            distancias.set(c2, kilometrajeConductor(eventos.get(c2)));
+        }
+    }
+
     // Verificar Kilometraje (max 30km = 300 manzanas)
-    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
-        return kilometrajeConductor(eventosConductor) <= 300;
+    public boolean kilometrajeValido(int i){
+        return distancias.get(i) <= 300;
     }
 
     // Verificar 2 conductores
@@ -530,7 +546,7 @@ public class Estado {
             for(int p=M; /*numeroPasajeros(c)< (N-M)/M &&*/ p<N; p++){
                 if(!pasajerosAsignados.contains(p) && enZona(c, p)){
                     anadirPasajero(p, c);
-                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                    if (kilometrajeConductor(eventos.get(c)) <= 300) pasajerosAsignados.add(p);
                     else eliminarPasajero(p, c);
                 }
             }
@@ -542,13 +558,18 @@ public class Estado {
             for(int p=M; p<N; p++){
                 while(!pasajerosAsignados.contains(p)){
                     anadirPasajero(p, c);
-                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                    if (kilometrajeConductor(eventos.get(c)) <= 300) pasajerosAsignados.add(p);
                     else eliminarPasajero(p, c);
                     c++;
                 }
                 c=0;
             }
         }
+
+        for (int i=0; i<M; i++){          
+            distancias.add(kilometrajeConductor(eventos.get(i)));
+        }
+
         distInicial = kilometrajeSolucion();
     }
 

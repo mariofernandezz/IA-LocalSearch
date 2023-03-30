@@ -21,7 +21,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.distInicial = estado.get_distInicial();
                         estadoNuevo.cambiarOrden(i, j, k);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(i)) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
+                        estadoNuevo.actualizar_distancias(i, null);
+                        if (estadoNuevo.kilometrajeValido(i) && estadoNuevo.dosPasajeros(estadoNuevo.getEventos().get(i))){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             int ncond = estadoNuevo.numeroConductores();
                             int dist = estadoNuevo.kilometrajeSolucion();
@@ -57,9 +58,11 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                     for (int k=0; k<estado.M; k++){ //conductores donde puedo ponerlo
                         if (estado.getEventos().get(k).size()>0 && i!=k) { 
                             Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
+                            estadoNuevo.distancias = estado.get_distancias();
                             estadoNuevo.distInicial = estado.get_distInicial();
                             estadoNuevo.cambiarConductor(p, i, k);
-                            if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(k))){
+                            estadoNuevo.actualizar_distancias(k, i);
+                            if (estadoNuevo.kilometrajeValido(k)){
                                 double h = Lab1HF.getHeuristicValue(estadoNuevo);
                                 int ncond = estadoNuevo.numeroConductores();
                                 int dist = estadoNuevo.kilometrajeSolucion();
@@ -81,7 +84,8 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos());
                         estadoNuevo.distInicial = estado.get_distInicial();                    
                         estadoNuevo.eliminarConductor(i, j);
-                        if (estadoNuevo.kilometrajeValido(estadoNuevo.getEventos().get(j))){
+                        estadoNuevo.actualizar_distancias(i, j);
+                        if (estadoNuevo.kilometrajeValido(j)){
                             double h = Lab1HF.getHeuristicValue(estadoNuevo);
                             int dist = estadoNuevo.kilometrajeSolucion();
                             int ncond = estadoNuevo.numeroConductores();

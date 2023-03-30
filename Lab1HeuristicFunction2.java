@@ -21,16 +21,14 @@ public class Lab1HeuristicFunction2 implements HeuristicFunction  {
     public double getHeuristicValue(Object s) {
         Estado estado = (Estado)s;
         ArrayList<ArrayList<Integer>> eventos = estado.getEventos();
-        int sum = 0;
         double ncond = 0;
         for (int i=0; i<estado.getM(); i++){
             if (eventos.get(i).size()>0) {
                 ncond+=1;
-                sum += estado.kilometrajeConductor(eventos.get(i));
             }
         }
         //System.out.println(sum/(300*estado.getN()) + (ncond/estado.getM()));
-        return 0.75*sum/estado.get_distInicial() + 0.25*ncond/estado.getM();
+        return 0.75*estado.kilometrajeSolucion()/estado.get_distInicial() + 0.25*ncond/estado.getM();
     }
     
     /*
