@@ -23,7 +23,6 @@ public class Lab1Demo {
         Estado estado = new Estado(N, M, seed);
         estado.solucionInicial5b(seed);
         mostrarMetricas(estado);
-        estado.distInicial = estado.kilometrajeSolucion();
         
         long startTime = System.currentTimeMillis();
         Lab1HillClimbingSearch(estado);
@@ -40,7 +39,7 @@ public class Lab1Demo {
         
         private static void mostrarMetricas(Estado estado){
             int ncond = estado.numeroConductores();
-            int dist = estado.kilometrajeSolucion();
+            int dist = estado.kilometrajeEstado();
             System.out.println("Eventos: " + estado.getEventos());
             System.out.println("Distancia recorrida: " + dist);
             System.out.println("Conductores usados: " + ncond);
@@ -49,17 +48,13 @@ public class Lab1Demo {
         private static void Lab1HillClimbingSearch(Estado estado) {
             System.out.println("\nLab1 HillClimbing  -->");
             try {
-                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                Problem problem =  new Problem(estado,new Lab1SuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
                 Search search =  new HillClimbingSearch();
                 SearchAgent agent = new SearchAgent(problem,search);
                 
                 //printActions(agent.getActions());
                 //printActions(agent.getActions());
                 printInstrumentation(agent.getInstrumentation());
-                
-                Estado estadoSolucion = (Estado) search.getGoalState();
-                mostrarMetricas(estadoSolucion);
-
                 
                 Estado estadoSolucion = (Estado) search.getGoalState();
                 mostrarMetricas(estadoSolucion);
@@ -77,7 +72,7 @@ public class Lab1Demo {
                 int k = 10;
                 double lambda = 0.001;
 
-                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                Problem problem =  new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda);
                 
                 //search.traceOn();

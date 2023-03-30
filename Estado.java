@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Collections;
 import java.util.HashSet;
 
 
@@ -20,6 +21,8 @@ public class Estado {
     int M;
     int N;
     int distInicial;
+    ArrayList<Integer> distancias;
+    
 
     public static String INTERCAMBIAR_ORDEN = "cambio de orden";
     public static String CAMBIAR_PASAJERO = "cambio pasajero";
@@ -33,37 +36,21 @@ public class Estado {
         Usuarios u = new Usuarios(N, M, seed); 
         eventos = new ArrayList<ArrayList<Integer>>(M);
         usuarios = new ArrayList<>();
+        distancias = new ArrayList<>();
         ordenar(u);
         distInicial = 300*M;
     }
-    /* 
-    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e){
-        N = u.size();
-        M = e.size();
-        usuarios = u;
-        eventos = new ArrayList<>();
-
-        for (int i = 0; i < M; i++) {
-            ArrayList<Integer> aux = (ArrayList<Integer>) e.get(i).clone();
-            eventos.add(aux);
-    }
-    }
-    }
-    */
 
      
-    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e, int d){
+    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e, ArrayList<Integer> ds, int d){
         N = u.size();
         M = e.size();
+        distancias = new ArrayList<> (ds);
         distInicial = d;
         usuarios = new ArrayList<>(u);
         eventos = new ArrayList<>(M);
         for(int i = 0; i<e.size(); ++i) {
             eventos.add(new ArrayList<>(e.get(i)));
-            /*
-            for(int j = 0; j<e.get(i).size(); j++) {
-                eventos.get(i).add(e.get(i).get(j));
-            }*/
         }
     }
     
@@ -81,7 +68,9 @@ public class Estado {
     public ArrayList<Usuario> getUsuarios(){ return usuarios;}
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
     public int getM(){ return M;}
-    public int getDistInicial(){ return distInicial;}
+    public int getN(){ return N;}
+    public int getDistInicial() {return distInicial;}
+    public ArrayList<Integer> getDistancias(){return distancias;}
 
     /* FUNCIONES AUXILIARES */
     public int obtenerConductor(int p){
@@ -103,30 +92,40 @@ public class Estado {
 
     /* OPERADORES */
     public void anadirConductor(int c){
-        if (eventos.size() < M) eventos.add(new ArrayList<>());
+        if (eventos.size() < M) {
+            eventos.add(new ArrayList<>());
+            distancias.add(0);
+        }
         eventos.get(c).add(c);
+        distancias.set(c, distancia(usuarios.get(c).getCoordOrigenX(), usuarios.get(c).getCoordOrigenY(), usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY())); 
     }
 
     public void eliminarConductor(int c, int c2){
         eventos.get(c).remove(Integer.valueOf(c));
         eventos.get(c2).add(c);
         eventos.get(c2).add(c);
+        distancias.set(c, kilometrajeConductor(c));
+        distancias.set(c2, kilometrajeConductor(c2));
     }
 
     public void anadirPasajero(int p, int c){
         eventos.get(c).add(p);
         eventos.get(c).add(p);
+        distancias.set(c, kilometrajeConductor(c));
     }
 
     public void eliminarPasajero(int p, Integer c){
         if (c == null) c = obtenerConductor(p);
         eventos.get(c).remove(Integer.valueOf(p));
         eventos.get(c).remove(Integer.valueOf(p));
+        distancias.set(c, kilometrajeConductor(c));
     }
 
     public void cambiarConductor(int p, Integer c, int c2){
         eliminarPasajero(p, c);
         anadirPasajero(p, c2);
+        distancias.set(c, kilometrajeConductor(c));
+        distancias.set(c2, kilometrajeConductor(c2));
     }
 
     public void cambiarOrden(int c, int id1, int id2){
@@ -134,6 +133,7 @@ public class Estado {
         int b = eventos.get(c).get(id2);
         eventos.get(c).set(id1, b);
         eventos.get(c).set(id2, a);
+        distancias.set(c, kilometrajeConductor(c));
     }
 
     public int numeroPasajeros(int c){
@@ -165,7 +165,7 @@ public class Estado {
                 p++;
                 c++;
                 if (c==M) c=0;
-                else esValido = kilometrajeValido(eventos.get(c));
+                else esValido = kilometrajeValido(c);
             }
             if (! esValido){
                 p--;
@@ -174,11 +174,9 @@ public class Estado {
             }
             c++;
         }
-        if(p<N) System.out.println("No es solucion");
-        else System.out.println("Solucion inicial generada");
-
     }
 
+    /*
     public void solucionInicial4b() {
         //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
@@ -201,7 +199,7 @@ public class Estado {
             while(p<(N-M) && esValido){
                 anadirPasajero(permutation.get(p), c);
                 p++;
-                esValido = kilometrajeValido(eventos.get(c));
+                esValido = kilometrajeValido(c);
             }
             if (! esValido){
                 p--;
@@ -210,14 +208,9 @@ public class Estado {
             }
             c++;
         }
-        if(p<N) System.out.println("No es solucion");
-        else System.out.println("Solucion inicial generada");
 
     }
     
-    
-
-    /*
          public void solucionInicial1() {
         ArrayList<Integer> usados = new ArrayList<>(n);
         for (int i = 100; i < n; ++i) usados.add(i);        //Lista con N-M ids
@@ -235,8 +228,7 @@ public class Estado {
             eventos.add(aux);
         }
         System.out.println(eventos);
-    }
-    */
+        }
 
         public void solucionInicial1() {
             //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
@@ -250,7 +242,7 @@ public class Estado {
             int p = M;
             repartirPasajeros(c, p);
         }
-
+        
         private void repartirPasajeros(int c, int p) {
             // Asignamos conductor a los pasajeros
 
@@ -312,7 +304,7 @@ public class Estado {
             else System.out.println("Solucion inicial generada");
             //System.out.println(eventos);
         }
-
+  
         private boolean pasajeroCercano(int actual, int nuevo) {
             int Ax = usuarios.get(actual).getCoordDestinoX();
             int Ay = usuarios.get(actual).getCoordDestinoY();
@@ -320,6 +312,7 @@ public class Estado {
             int By = usuarios.get(nuevo).getCoordOrigenY();
             return 50 > distancia(Ax, Ay, Bx, By);
         }
+        */
 
     /* CONDICIONES DE APLICABILIDAD */
 
@@ -336,18 +329,19 @@ public class Estado {
         return abs(Ax - Bx) + abs(Ay - By);
     }
 
-    public int kilometrajeSolucion(){
+    public int kilometrajeEstado(){
         int sum = 0;
         for (int i=0; i<M; i++){
-            sum += kilometrajeConductor(eventos.get(i));
+            sum += distancias.get(i);
         }
         return sum;
     }
 
-    public int kilometrajeConductor(ArrayList<Integer> eventosConductor){
+
+    public int kilometrajeConductor(int c){
+        ArrayList<Integer> eventosConductor = eventos.get(c);
         if (eventosConductor.size() == 0) return 0;
         int dist = 0;
-        int c = eventosConductor.get(0);
         int Ax, Ay, Bx, By;
         Ax = usuarios.get(c).getCoordOrigenX();
         Ay = usuarios.get(c).getCoordOrigenY();
@@ -371,8 +365,8 @@ public class Estado {
     }
 
     // Verificar Kilometraje (max 30km = 300 manzanas)
-    public boolean kilometrajeValido(ArrayList<Integer> eventosConductor){
-        return kilometrajeConductor(eventosConductor) <= 300;
+    public boolean kilometrajeValido(int i){
+        return distancias.get(i) <= 300;
     }
 
     // Verificar 2 conductores
@@ -390,6 +384,7 @@ public class Estado {
         return eventos.toString();
     }
     
+    /*
     // HEURÍSTICA 2 DE HÉCTOR
     public int kilometrajeConductor_manzanasLibres (ArrayList<Integer> eventosConductor) {
         int dist = 0;
@@ -422,9 +417,10 @@ public class Estado {
             Ay = By;
         }
         distTotal += distancia(Ax, Ay, usuarios.get(c).getCoordDestinoX(), usuarios.get(c).getCoordDestinoY());
-        return distTotal + distLibre; // Manzanas
+        int distSinUsar = 300 - distTotal;
+        return distLibre + distSinUsar; // Manzanas
     }
-
+    
     private int mitadCamino (int a, int b){
         double orig = (double) a;
         double dest = (double) b;
@@ -470,11 +466,21 @@ public class Estado {
             centroConductores.add(driverList);
         }
 
+        // Añadimos todos los conductores a los eventos y calculamos el centro de sus trayectos al trabajo
+        for(int i = 0; i < M; i++) {
+            anadirConductor(i);
+            List<Integer> driverList = new ArrayList<>();
+            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenX(), usuarios.get(i).getCoordDestinoX())); // Centro en X
+            driverList.add(mitadCamino(usuarios.get(i).getCoordOrigenY(), usuarios.get(i).getCoordDestinoY())); // Centro en Y
+            centroConductores.add(driverList);
+        }
+
         // Definimos el radio de la zona considerada cercana para los conductores, según el número que haya
         // X conductores --> r = 100/raiz(X) * 2 (x lado)
         int a = 1;
         while (a*a <= M) a++;
         a--;
+        int radio = (int) Math.ceil(M/(a*2));
         int radio = (int) Math.ceil(M/(a*2));
 
         // Asignamos conductor a los pasajeros, intentando primero que estén dentro de la zona del conductor
@@ -493,6 +499,15 @@ public class Estado {
                         asignado = true;
                     } else eliminarPasajero(pasajero, conductor);                    
                 } else eliminarPasajero(pasajero, conductor);
+                anadirPasajero(pasajero, conductor);
+                if (kilometrajeValido(eventos.get(conductor))) {
+                    if (primer_conductor_disponible == -1) {
+                        primer_conductor_disponible = conductor;
+                    }
+                    if (dentroZona(centroConductores.get(conductor).get(0), centroConductores.get(conductor).get(0), pasajero, radio)) {
+                        asignado = true;
+                    } else eliminarPasajero(pasajero, conductor);                    
+                } else eliminarPasajero(pasajero, conductor);
                 conductor++;
             }
             if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else break;
@@ -501,8 +516,9 @@ public class Estado {
         if(pasajero<N) System.out.println("No es solucion");
         else System.out.println("Solucion inicial generada");
     }
-
-
+    // ampliar radio
+    // que solo orig o dest esté en la zona
+*/
     public boolean enZona(int c, int p){
         int AOx = usuarios.get(c).getCoordOrigenX();
         int AOy = usuarios.get(c).getCoordOrigenY();
@@ -519,6 +535,8 @@ public class Estado {
         return false;
         
     }
+
+    /*
     public void solucionInicial5(){
         HashSet<Integer> pasajerosAsignados = new HashSet<>();
 
@@ -529,10 +547,10 @@ public class Estado {
 
         //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
         for(int c=0; c<M; c++){
-            for(int p=M; /*numeroPasajeros(c)< (N-M)/M &&*/ p<N; p++){
+            for(int p=M; p<N; p++){
                 if(!pasajerosAsignados.contains(p) && enZona(c, p)){
                     anadirPasajero(p, c);
-                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                    if (kilometrajeValido(c)) pasajerosAsignados.add(p);
                     else eliminarPasajero(p, c);
                 }
             }
@@ -544,7 +562,7 @@ public class Estado {
             for(int p=M; p<N; p++){
                 while(!pasajerosAsignados.contains(p)){
                     anadirPasajero(p, c);
-                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                    if (kilometrajeValido(c)) pasajerosAsignados.add(p);
                     else eliminarPasajero(p, c);
                     c++;
                 }
@@ -552,6 +570,7 @@ public class Estado {
             }
         }
     }
+    
 
 
         public void solucionInicial5b(int seed){
@@ -572,25 +591,62 @@ public class Estado {
                         pasajerosProbados.add(p);
                         if(enZona(c, p)){
                             anadirPasajero(p, c);
-                            if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
+                            if (kilometrajeValido(c)) pasajerosAsignados.add(p);
                             else eliminarPasajero(p, c);
                         }
                     }
                 }
+                conductor++;
             }
-    
-            //Asignamos pasajeros que no han sido asignados por la zona
-            while(pasajerosAsignados.size()!= N-M){
+            if(!asignado && primer_conductor_disponible != -1) anadirPasajero(pasajero, primer_conductor_disponible); else if (!asignado){
+                System.out.println("no disponible");
+                break;
+            } 
+            pasajero++;
+        }
+        if(pasajero<N) System.out.println("No es solucion " + pasajero);
+        else System.out.println("Solucion inicial generada");
+    }
+    */
+
+    public void solucionInicial5b(int seed){
+        HashSet<Integer> pasajerosAsignados = new HashSet<>();
+        Random rndm = new Random(seed);
+
+        //Añadimos todos los conductores a los eventos
+        for(int i=0; i<M; i++) {
+            anadirConductor(i);
+        }
+
+        //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
+        for(int c=0; c<M; c++){
+            HashSet<Integer> pasajerosProbados = new HashSet<>();
+            while(pasajerosProbados.size() + pasajerosAsignados.size()<N-M){
                 int p = rndm.nextInt(M, N);
-                while(!pasajerosAsignados.contains(p)){
-                    int c = rndm.nextInt(0, M);
-                    anadirPasajero(p, c);
-                    if (kilometrajeValido(eventos.get(c))) pasajerosAsignados.add(p);
-                    else eliminarPasajero(p, c);
+                if (!pasajerosAsignados.contains(p) && !pasajerosProbados.contains(p)){
+                    pasajerosProbados.add(p);
+                    if(enZona(c, p)){
+                        anadirPasajero(p, c);
+                        if (kilometrajeValido(c)) pasajerosAsignados.add(p);
+                        else eliminarPasajero(p, c);
+                    }
                 }
             }
-    }
+        }
 
+        //Asignamos pasajeros que no han sido asignados por la zona
+        while(pasajerosAsignados.size()!= N-M){
+            int p = rndm.nextInt(M, N);
+            while(!pasajerosAsignados.contains(p)){
+                int c = rndm.nextInt(0, M);
+                anadirPasajero(p, c);
+                if (kilometrajeValido(c)) pasajerosAsignados.add(p);
+                else eliminarPasajero(p, c);
+            }
+        }
+
+        distInicial = kilometrajeEstado();
+    }
     
 
     
