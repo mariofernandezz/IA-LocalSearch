@@ -11,8 +11,8 @@ public class Lab1HeuristicFunction1 implements HeuristicFunction  {
   
   // Heurística 1: Se considera únicamente la suma de distancia recorrida por todos los conductores
   public double getHeuristicValue(Object s) {
-    Estado estado = (Estado)s;
-    return estado.kilometrajeSolucion();
+      Estado estado = (Estado)s;
+      return estado.kilometrajeEstado();
   }  
 }
 

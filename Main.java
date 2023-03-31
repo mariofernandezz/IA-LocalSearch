@@ -79,7 +79,7 @@ public class Main {
         System.out.println(estado.numeroPasajeros(0));
 */
         
-        estado.solucionInicial1();
+        //estado.solucionInicial5();
         for(int i = 0; i < estado.getEventos().size(); i++) {
             ArrayList<Integer> e1 = estado.getEventos().get(i);
             System.out.println("Conductor: " + i + " Eventos: " + e1);
