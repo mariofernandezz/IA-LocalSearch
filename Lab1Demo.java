@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import aima.search.framework.Problem;
@@ -13,6 +12,20 @@ import aima.search.informed.SimulatedAnnealingSearch;
 public class Lab1Demo {
     public static void main(String[] args){
 
+        int N, M, seed, alg, h;
+
+        if (args.length != 5) {
+            System.out.println("Debes ingresar 5 valores separados por espacios");
+            return;
+        }
+        
+        N = Integer.parseInt(args[0]);
+        M = Integer.parseInt(args[1]);
+        seed = Integer.parseInt(args[2]);
+        alg = Integer.parseInt(args[3]);
+        h = Integer.parseInt(args[4]);
+
+        /*
         // Se obtienen los parametros de la solucion
         Scanner scan = new Scanner(System.in);
         System.out.println("Cuantos participantes hay? (N)");
@@ -24,7 +37,7 @@ public class Lab1Demo {
         System.out.println("¿Qué algoritmo quieres usar? \n(1) Hill Climbing \n(2) Simulated Annealing");
         int alg = scan.nextInt();
         System.out.println("¿Qué heurística quieres usar? \n(1) Min distancia \n(2) Min distancia y conductores");
-        int h = scan.nextInt();
+        int h = scan.nextInt();*/
 
         // Creacion y print del estado inicial
         System.out.println("\nSolución inicial  -->");
