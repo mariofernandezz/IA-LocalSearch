@@ -4,6 +4,10 @@
 
 El objetivo de este documento es facilitar al usuario la creación de ejecuciones y el diseño de experimentos para validar los resultados extraídos de la práctica.
 
+## Tabla de contenidos
+- [Creación de ejecuciones simples](#creación-de-ejecuciones-simples)
+- [Diseño de experimentos](#diseño-de-experimentos)
+- [Modificación de otros elementos del problema](#modificación-de-otros-elementos-del-problema)
 
 ## Creación de ejecuciones simples
 
@@ -52,3 +56,10 @@ $ .\ejecuciones_unix.sh
 :bangbang: Es imprescindible que estos ficheros se encuentre en el mismo directorio que todos los archivos `.java` del proyecto y que los archivos `AIMA.jar` y `Comparticion.jar` para que la ejecución sea posible.
 
 :bangbang::bangbang: Antes de ejecutarlos, debéis entrar al código y añadir la **ruta del directorio** donde se encuentran todos vuestros archivos del proyecto, incluido este mismo, en la **tercera** línea del archivo.
+
+## Modificación de otros elementos del problema
+
+De cara a poder explorar y verificar ciertos resultados de la práctica, podéis modificar algunos de los elementos del problema. A continuación se especifican cuales son y la forma en que se pueden modificar:
+- **Generador de la solución inicial:** para cambiar el algoritmo que genera la solución inicial se debe hacer desde los ficheros `Lab1Demo.java` (línea 31) o `Lab1Experimentos.java` (línea 31). Las opciones disponibles son: la generación más sencilla, *solucionInicial1()*; la generación sofisticada *solucionInicial2()* (default); y la sofisticada con aleatoriedad *solucionInicial3(seed)*.
+- **Operadores:** se puede añadir el operador de *añadir_conductor(conductor)* si se des-comenta su implementación en los archivos `Lab1SuccessorFunction.java` y `Lab1SASuccessorFunction.java`. Está indicado qué parte del código es cada operador.
+- **Parámetros del algoritmo de Simulated Annealing:** se pueden modificar dichos parámetros desde los ficheros `Lab1Demo.java` (líneas 77-80) o `Lab1Experimentos.java` (líneas 77-80).
