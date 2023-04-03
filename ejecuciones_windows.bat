@@ -1,6 +1,6 @@
 @echo off
 
-cd C:\Users\hecto\Desktop\Práctica1\IA
+cd  REM Añadir aquí el directorio donde se encuentran vuestros archivos 
 
 REM Lee la lista de valores desde el archivo inputs.txt
 setlocal ENABLEDELAYEDEXPANSION
@@ -42,7 +42,7 @@ for /F "tokens=1,2,3,4,5" %%a in ("%inputs%") do (
         echo ------------Ejecución %%i------------ >> output.txt
         echo. >> output.txt
         REM Ejecuta el programa con los valores como argumentos
-        java -cp .;AIMA.jar;Comparticion.jar Lab1Demo !N! !M! !seed! !alg! !h! >> output.txt 
+        java -cp .;AIMA.jar;Comparticion.jar Lab1Experimentos !N! !M! !seed! !alg! !h! >> output.txt 
 
     )
 )

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /Users/hecto/Desktop/Práctica1/IA
+cd # Añadir aquí el directorio donde se encuentran vuestros archivos 
 
 # Lee la lista de valores desde el archivo inputs.txt
 inputs=$(cat inputs.txt)
@@ -35,6 +35,6 @@ while read -r N M seed alg h; do
         echo "------------Ejecución $i------------" >> output.txt
         echo "" >> output.txt
         # Ejecuta el programa con los valores como argumentos
-        java -cp .:AIMA.jar:Comparticion.jar Lab1Demo $N $M $seed $alg $h >> output.txt
+        java -cp .:AIMA.jar:Comparticion.jar Lab1Experimentos $N $M $seed $alg $h >> output.txt
     done
 done <<< "$inputs"

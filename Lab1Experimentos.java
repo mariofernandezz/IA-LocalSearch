@@ -9,21 +9,21 @@ import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
-public class Lab1Demo {
+public class Lab1Experimentos {
     public static void main(String[] args){
 
-        // Se obtienen los parametros de la solucion
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Cuantos participantes hay? (N)");
-        int N = scan.nextInt();
-        System.out.println("Cuantos son conductores? (M)");
-        int M = scan.nextInt();
-        System.out.println("Introduce una seed");
-        int seed = scan.nextInt();
-        System.out.println("¿Qué algoritmo quieres usar? \n(1) Hill Climbing \n(2) Simulated Annealing");
-        int alg = scan.nextInt();
-        System.out.println("¿Qué heurística quieres usar? \n(1) Min distancia \n(2) Min distancia y conductores");
-        int h = scan.nextInt();
+        int N, M, seed, alg, h;
+
+        if (args.length != 5) {
+            System.out.println("Debes ingresar 5 valores separados por espacios");
+            return;
+        }
+        
+        N = Integer.parseInt(args[0]);
+        M = Integer.parseInt(args[1]);
+        seed = Integer.parseInt(args[2]);
+        alg = Integer.parseInt(args[3]);
+        h = Integer.parseInt(args[4]);
 
         // Creacion y print del estado inicial
         System.out.println("\nSolución inicial  -->");
