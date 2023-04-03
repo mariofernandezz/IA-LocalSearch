@@ -81,8 +81,8 @@ public class Lab1Demo {
                 // Definición de los parámetros del algoritmo
                 int it = 10000000;
                 int itpc = 100;
-                int k = 10;
-                double lambda = 0.001;
+                int k = 25;
+                double lambda = 0.0001;
 
                 Problem problem;
                 if (h==1) problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
