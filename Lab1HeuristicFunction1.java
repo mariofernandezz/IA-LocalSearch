@@ -1,3 +1,5 @@
+// DEFINICIÓN DE LA FUNCIÓN HEURISTICA 1
+
 import aima.search.framework.HeuristicFunction;
 
 public class Lab1HeuristicFunction1 implements HeuristicFunction  {

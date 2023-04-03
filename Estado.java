@@ -1,4 +1,4 @@
-// IMPLEMENTACIÓN DEL ESTADO
+// IMPLEMENTACIÓN DEL ESTADO DEL PROBLEMA
 
 import IA.Comparticion.Usuario;
 import IA.Comparticion.Usuarios;
@@ -26,7 +26,7 @@ public class Estado {
 
     // Eventos de los posibles conductores
     // Si no actua como conductor, no tiene ningun evento asociado
-    // El primer elemento de la lista de cada conductor, es su id si este conduce
+    // El primer elemento de la lista de cada conductor es su id, solo si este conduce
     private ArrayList<ArrayList<Integer>> eventos;
     
     // Numero de posibles conductores
@@ -98,7 +98,7 @@ public class Estado {
         }
         int c = 0;
         int p = M;
-        if(repartirPasajeros(c, p)) return true; else return false;
+        if(repartirPasajeros(c, p)) return true; else return false; // Devuelve true si se ha podido generar una solución inicial
     }
 
     private boolean repartirPasajeros(int c, int p) {
@@ -120,7 +120,7 @@ public class Estado {
         if (p<N) return false; else return true;
     }
 
-
+    // Método 2 para la generación de la solución inicial. Método complejo.
     public boolean solucionInicial2(){
         HashSet<Integer> pasajerosAsignados = new HashSet<>();
 
@@ -131,7 +131,7 @@ public class Estado {
 
         //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
         for(int c=0; c<M; c++){
-            for(int p=M; /*numeroPasajeros(c)< (N-M)/M &&*/ p<N; p++){
+            for(int p=M; p<N; p++){
                 if(!pasajerosAsignados.contains(p) && enZona(c, p)){
                     anadirPasajero(p, c);
                     if (kilometrajeValido(c)) pasajerosAsignados.add(p);
@@ -140,7 +140,7 @@ public class Estado {
             }
         }
 
-        //Asignamos pasajeros que no han sido asignados por la zona
+        //Asignamos pasajeros que no han sido asignados por la "zona
         if(pasajerosAsignados.size()!= N-M){
             int c = 0;
             for(int p=M; p<N; p++){
@@ -154,9 +154,10 @@ public class Estado {
                 c=0;
             }
         }
-        return true;
+        return true; // Devuelve true si se ha podido generar una solución inicial
     }
-		  
+		
+    // Método 3 para la generación de la solución inicial. Método complejo con aleatoriedad.
     public boolean solucionInicial3(int seed){
         HashSet<Integer> pasajerosAsignados = new HashSet<>();
         Random rndm = new Random(seed);
@@ -170,7 +171,7 @@ public class Estado {
         for(int c=0; c<M; c++){
             HashSet<Integer> pasajerosProbados = new HashSet<>();
             while(pasajerosProbados.size() + pasajerosAsignados.size()<N-M){
-                int p = rndm.nextInt(M, N);
+                int p = rndm.nextInt(M, N); // El orden de los pasajeros es aleatorio
                 if (!pasajerosAsignados.contains(p) && !pasajerosProbados.contains(p)){
                     pasajerosProbados.add(p);
                     if(enZona(c, p)){
@@ -184,18 +185,18 @@ public class Estado {
 
         //Asignamos pasajeros que no han sido asignados por la zona
         while(pasajerosAsignados.size()!= N-M){
-            int p = rndm.nextInt(M, N);
+            int p = rndm.nextInt(M, N); // Miramos los pasajeros en orden aleatorio
             HashSet<Integer> conductoresProbados = new HashSet<>();
             while(!pasajerosAsignados.contains(p)){
                 if (conductoresProbados.size() == M) return false; // El pasajero p no cabe en ninguno de los conductores
-                int c = rndm.nextInt(0, M);
+                int c = rndm.nextInt(0, M); // Se le intenta asignar conductor de forma aleatoria
                 conductoresProbados.add(c);
                 anadirPasajero(p, c);
                 if (kilometrajeValido(c)) pasajerosAsignados.add(p);
                 else eliminarPasajero(p, c);
             }
         }
-        return true;
+        return true; // Devuelve true si se ha podido generar una solución inicial
     }
 
     
@@ -228,7 +229,7 @@ public class Estado {
         distancias.set(c2, kilometrajeConductor(c2));
     }
 
-    public void cambiarOrden(int c, int id1, int id2){
+    public void intercambiarEventos(int c, int id1, int id2){
         int a = eventos.get(c).get(id1);
         int b = eventos.get(c).get(id2);
         eventos.get(c).set(id1, b);
@@ -240,6 +241,7 @@ public class Estado {
     //******************* FUNCIONES AUXILIARES PARA CREAR O MODIFICAR ESTADO ***********************
     //**********************************************************************************************
 
+    // Método que devuelve true si los dos puntos de un pasajero se encuentran dentro de la 'zona' de un conductor.
     public boolean enZona(int c, int p){
         int AOx = usuarios.get(c).getCoordOrigenX();
         int AOy = usuarios.get(c).getCoordOrigenY();
