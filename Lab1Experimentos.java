@@ -28,7 +28,10 @@ public class Lab1Experimentos {
         // Creacion y print del estado inicial
         System.out.println("\nSolución inicial  -->");
         Estado estado = new Estado(N, M, seed);
-        estado.solucionInicial5b(seed);
+        if (!estado.solucionInicial2()){
+            System.out.println("No se ha podido generar una solución inicial");
+            return;
+        } 
         mostrarMetricas(estado);
         
         long startTime = System.currentTimeMillis();

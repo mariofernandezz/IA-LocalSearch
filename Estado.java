@@ -93,14 +93,13 @@ public class Estado {
     //********************************** SOLUCIONES INICIALES **************************************
     //**********************************************************************************************
     
-    public void solucionInicial4() {
+    public void solucionInicial1() {
         // Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
         ArrayList<Integer> permutation = new ArrayList<>();
         for (int p=M; p<N; p++){
             permutation.add(p);
         }
-        Collections.shuffle(permutation);
 
         // Añadimos todos los conductores a los eventos
         for(int i = 0; i < M; i++) {
@@ -128,8 +127,43 @@ public class Estado {
         }
     }
 
+    public boolean solucionInicial2(){
+        HashSet<Integer> pasajerosAsignados = new HashSet<>();
 
-    public void solucionInicial5b(int seed){
+        //Añadimos todos los conductores a los eventos
+        for(int i=0; i<M; i++) {
+            anadirConductor(i);
+        }
+
+        //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
+        for(int c=0; c<M; c++){
+            for(int p=M; /*numeroPasajeros(c)< (N-M)/M &&*/ p<N; p++){
+                if(!pasajerosAsignados.contains(p) && enZona(c, p)){
+                    anadirPasajero(p, c);
+                    if (kilometrajeValido(c)) pasajerosAsignados.add(p);
+                    else eliminarPasajero(p, c);
+                }
+            }
+        }
+
+        //Asignamos pasajeros que no han sido asignados por la zona
+        if(pasajerosAsignados.size()!= N-M){
+            int c = 0;
+            for(int p=M; p<N; p++){
+                while(!pasajerosAsignados.contains(p)){
+                    if (c == M) return false;
+                    anadirPasajero(p, c);
+                    if (kilometrajeValido(c)) pasajerosAsignados.add(p);
+                    else eliminarPasajero(p, c);
+                    c++;
+                }
+                c=0;
+            }
+        }
+        return true;
+    }
+
+    public void solucionInicial3(int seed){
         HashSet<Integer> pasajerosAsignados = new HashSet<>();
         Random rndm = new Random(seed);
 
@@ -138,7 +172,7 @@ public class Estado {
             anadirConductor(i);
         }
 
-        //Para cada conductor hacemos una lista de los conductores que estan dentro de la "zona"
+        //Para cada conductor hacemos una lista de los conductores que están dentro de la "zona"
         for(int c=0; c<M; c++){
             HashSet<Integer> pasajerosProbados = new HashSet<>();
             while(pasajerosProbados.size() + pasajerosAsignados.size()<N-M){
