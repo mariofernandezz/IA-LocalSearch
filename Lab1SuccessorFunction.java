@@ -15,7 +15,7 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         Estado estado  = (Estado) s;
 
         // 1. Intercambio de eventos dentro de un mismo conductor
-        for (int i=0; i<estado.M; i++){
+        for (int i=0; i<estado.getM(); i++){
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ // El primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 for (int k=1; k<j; k++){
                     if (estado.getEventos().get(i).get(j) != estado.getEventos().get(i).get(k)) {
@@ -32,28 +32,27 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         }
 
         // 2. Cambiar pasajero de conductor
-        for (int i=0; i<estado.M; i++){
+        for (int i=0; i<estado.getM(); i++){
             HashSet<Integer> set = new HashSet<>(); // Cada pasajero tiene dos eventos, solo hacemos nuevo sucesor para uno de ellos
             for (int j=1; j<estado.getEventos().get(i).size(); j++){ // El primero siempre debe ser el conductor (no se puede cambiar) --> empezamos j en 1
                 int p = estado.getEventos().get(i).get(j);
                 if (!set.contains(p)){ // Únicamente si es el primer evento
                     set.add(p);
                     
-                    /*
+                    
                     // 4. Añadir conductor
-                    if (p<estado.M){
-                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistancias(), estado.distInicial);
+                    if (p<estado.getM()){
+                        Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistancias());
                         estadoNuevo.eliminarPasajero(p, i);
                         estadoNuevo.anadirConductor(p);
-                        double h = Lab1HF.getHeuristicValue(estadoNuevo);
                         int dist = estadoNuevo.kilometrajeEstado();
                         int ncond = estadoNuevo.numeroConductores();
-                        String S = estadoNuevo.ANADIR_CONDUCTOR + " " + p + ", eliminandolo de conductor " + i + " con coste: " + h + " ncond: " + ncond + " distancia: " + dist + " estado: " + estadoNuevo.conversionString();
+                        String S = estadoNuevo.ANADIR_CONDUCTOR + " " + p + ", eliminandolo de conductor " + i + " estado: " + estadoNuevo.conversionString();
                         retVal.add(new Successor(S, estadoNuevo));
                     } 
-                    */
+                    
 
-                    for (int k=0; k<estado.M; k++){ 
+                    for (int k=0; k<estado.getM(); k++){ 
                         if (estado.getEventos().get(k).size()>0 && i!=k) {  // Conductores donde puedo ponerlo
                             Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistancias());
                             estadoNuevo.cambiarConductor(p, i, k);
@@ -69,9 +68,9 @@ public class Lab1SuccessorFunction implements SuccessorFunction {
         }
 
         // 3. Si un conductor solo se lleva a él mismo, ponerlo a otro conductor y eliminarlo
-        for (int i=0; i<estado.M; i++){
+        for (int i=0; i<estado.getM(); i++){
             if (estado.getEventos().get(i).size() == 1) { // Solo se conduce a él mismo
-                for (int j=0; j<estado.M; j++){ 
+                for (int j=0; j<estado.getM(); j++){ 
                     if (estado.getEventos().get(j).size()>0 && i!=j) { // Conductores donde puedo ponerlo 
                         Estado estadoNuevo = new Estado(estado.getUsuarios(), estado.getEventos(), estado.getDistancias());                    
                         estadoNuevo.eliminarConductor(i, j);

@@ -30,10 +30,10 @@ public class Estado {
     private ArrayList<ArrayList<Integer>> eventos;
     
     // Numero de posibles conductores
-    int M;
+    private int M;
 
     // Numero de participantes totales
-    int N;
+    private int N;
 
     // Distancia que recorre cada conductor
     ArrayList<Integer> distancias;
