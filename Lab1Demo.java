@@ -83,8 +83,8 @@ public class Lab1Demo {
                 double lambda = 0.001;
 
                 Problem problem;
-                if (h==1) problem = new Problem(estado,new Lab1SAIterationsSuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
-                else problem = new Problem(estado,new Lab1SAIterationsSuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                if (h==1) problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                else problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda); 
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);

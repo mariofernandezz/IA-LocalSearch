@@ -61,19 +61,17 @@ public class Estado {
         usuarios = new ArrayList<>();
         distancias = new ArrayList<>();
         ordenar(u);
-        distInicial = 300*M;
     }
 
     // Crea un estado dado los participantes y sus ids (u), los eventos para cada conductor (e), las distancias 
-    // que recorren cada conductor (ds) y la distancia de la solución inicial de la búsqueda (d)
-    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e, ArrayList<Integer> ds, int d){
+    // que recorren cada conductor (ds)
+    public Estado(ArrayList<Usuario> u, ArrayList<ArrayList<Integer>> e, ArrayList<Integer> ds){
         N = u.size();
         M = e.size();
         usuarios = new ArrayList<>(u);
         eventos = new ArrayList<>(M);
         for (ArrayList<Integer> integers : e) eventos.add(new ArrayList<>(integers));
         distancias = new ArrayList<> (ds);
-        distInicial = d;
     }
 
 
@@ -85,7 +83,6 @@ public class Estado {
     public ArrayList<ArrayList<Integer>> getEventos(){ return eventos;}
     public int getM(){ return M;}
     public int getN(){ return N;}
-    public int getDistInicial() {return distInicial;}
     public ArrayList<Integer> getDistancias(){return distancias;}
 
     
@@ -93,38 +90,35 @@ public class Estado {
     //********************************** SOLUCIONES INICIALES **************************************
     //**********************************************************************************************
     
-    public void solucionInicial1() {
-        // Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
+    public boolean solucionInicial1() {
+        //Todos los conductores conducen. Llenamos los coches hasta el límite de kilometraje y 
         // cuando un conductor no puede hacer más viajes pasamos al siguiente conductor.
-        ArrayList<Integer> permutation = new ArrayList<>();
-        for (int p=M; p<N; p++){
-            permutation.add(p);
-        }
-
         // Añadimos todos los conductores a los eventos
         for(int i = 0; i < M; i++) {
             anadirConductor(i);
         }
-
-        // Asignamos conductor a los pasajeros
         int c = 0;
-        int p = 0;
+        int p = M;
+        if(repartirPasajeros(c, p)) return true; else return false;
+    }
+
+    private boolean repartirPasajeros(int c, int p) {
+        // Asignamos conductor a los pasajeros
         boolean esValido = true;
-        while(p<(N-M) && c<M){
-            while(p<(N-M) && esValido){
-                anadirPasajero(permutation.get(p), c);
+        while(p<N && c<M){
+            while(p<N && esValido){
+                anadirPasajero(p, c);
                 p++;
-                c++;
-                if (c==M) c=0;
-                else esValido = kilometrajeValido(c);
+                esValido = kilometrajeValido(c);
             }
-            if (! esValido){
+            if(!esValido) {
                 p--;
-                eliminarPasajero(permutation.get(p), c);
+                eliminarPasajero(p, null);
                 esValido = true;
             }
             c++;
         }
+        if (p<N) return false; else return true;
     }
 
     public boolean solucionInicial2(){
@@ -163,7 +157,7 @@ public class Estado {
         return true;
     }
 
-    public void solucionInicial3(int seed){
+    public boolean solucionInicial3(int seed){
         HashSet<Integer> pasajerosAsignados = new HashSet<>();
         Random rndm = new Random(seed);
 
@@ -191,15 +185,17 @@ public class Estado {
         //Asignamos pasajeros que no han sido asignados por la zona
         while(pasajerosAsignados.size()!= N-M){
             int p = rndm.nextInt(M, N);
+            HashSet<Integer> conductoresProbados = new HashSet<>();
             while(!pasajerosAsignados.contains(p)){
+                if (conductoresProbados.size() == M) return false; // El pasajero p no cabe en ninguno de los conductores
                 int c = rndm.nextInt(0, M);
+                conductoresProbados.add(c);
                 anadirPasajero(p, c);
                 if (kilometrajeValido(c)) pasajerosAsignados.add(p);
                 else eliminarPasajero(p, c);
             }
         }
-
-        distInicial = kilometrajeEstado();
+        return true;
     }
 
     
