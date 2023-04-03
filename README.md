@@ -60,6 +60,6 @@ $ .\ejecuciones_unix.sh
 ## Modificación de otros elementos del problema
 
 De cara a poder explorar y verificar ciertos resultados de la práctica, podéis modificar algunos de los elementos del problema. A continuación se especifican cuales son y la forma en que se pueden modificar:
-- **Generador de la solución inicial:** para cambiar el algoritmo que genera la solución inicial se debe hacer desde los ficheros `Lab1Demo.java` (línea 31) o `Lab1Experimentos.java` (línea 31). Las opciones disponibles son: la generación más sencilla, *solucionInicial1()*; la generación sofisticada *solucionInicial2()* (default); y la sofisticada con aleatoriedad *solucionInicial3(seed)*.
+- **Generador de la solución inicial:** para cambiar el algoritmo que genera la solución inicial se debe hacer desde los ficheros `Lab1Demo.java` (línea 31), para las ejecuciones simples, o `Lab1Experimentos.java` (línea 31), para el diseño de experimentos. Las opciones disponibles son: la generación más sencilla, *solucionInicial1()*; la generación sofisticada *solucionInicial2()* (default); y la sofisticada con aleatoriedad *solucionInicial3(seed)*.
 - **Operadores:** se puede añadir el operador de *añadir_conductor(conductor)* si se des-comenta su implementación en los archivos `Lab1SuccessorFunction.java` y `Lab1SASuccessorFunction.java`. Está indicado qué parte del código es cada operador.
 - **Parámetros del algoritmo de Simulated Annealing:** se pueden modificar dichos parámetros desde los ficheros `Lab1Demo.java` (líneas 80-83) o `Lab1Experimentos.java` (líneas 80-83).
