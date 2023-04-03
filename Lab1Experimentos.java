@@ -77,10 +77,10 @@ public class Lab1Experimentos {
             System.out.println("\nLab1 Simulated Annealing  -->");
             try {
                 // Definición de los parámetros del algoritmo
-                int it = 2000000;
+                int it = 1000000;
                 int itpc = 100;
-                int k = 125;
-                double lambda = 0.001;
+                int k = 25;
+                double lambda = 0.0001;
 
                 Problem problem;
                 if (h==1) problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
