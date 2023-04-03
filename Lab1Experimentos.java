@@ -77,14 +77,14 @@ public class Lab1Experimentos {
             System.out.println("\nLab1 Simulated Annealing  -->");
             try {
                 // Definición de los parámetros del algoritmo
-                int it = 10000000;
+                int it = 2000000;
                 int itpc = 100;
-                int k = 10;
+                int k = 125;
                 double lambda = 0.001;
 
                 Problem problem;
-                if (h==1) problem = new Problem(estado,new Lab1SAIterationsSuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
-                else problem = new Problem(estado,new Lab1SAIterationsSuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
+                if (h==1) problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction1());
+                else problem = new Problem(estado,new Lab1SASuccessorFunction(), new Lab1GoalTest(),new Lab1HeuristicFunction2());
                 SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(it, itpc, k, lambda); 
                 //search.traceOn();
                 SearchAgent agent = new SearchAgent(problem,search);
